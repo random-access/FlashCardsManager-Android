@@ -25,6 +25,9 @@
     <string name="l_add_success">Label added successfully!</string>
     <string name="l_edit_success">Label edited successfully!</string>
 
+    <string name="title">title</string>
+    <string name="stacks">number of stacks</string>
+
     <string name="learn">Learn</string>
 
     <string name="delete">Delete</string>
