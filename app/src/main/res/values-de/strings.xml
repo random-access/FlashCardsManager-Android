@@ -26,4 +26,9 @@
     <string name="p_edit">Projekt bearbeiten</string>
     <string name="p_edit_success">Projekt erfolgreich hinzugefügt!</string>
     <string name="yes">Ja</string>
+    <string name="error_empty_field">Feld darf nicht leer sein!</string>
+    <string name="error_enter_number">Bitte Zahl eingeben!</string>
+    <string name="error_invalid_stacks">Ungültige Stapelanzahl!</string>
+    <string name="stacks">Stapel</string>
+    <string name="title">Titel</string>
 </resources>

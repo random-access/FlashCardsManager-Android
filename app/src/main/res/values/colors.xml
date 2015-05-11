@@ -5,4 +5,6 @@
     <item name="green" type="color">#00FF00</item>
     <item name="yellow" type="color">#FFFF00</item>
     <item name="red" type="color">#FF0000</item>
+
+    <item name="color_selected" type="color">#BBBBBB</item>
 </resources>

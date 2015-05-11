@@ -1,8 +1,11 @@
 package org.random_access.flashcardsmanager.storage.contracts;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
+
+import org.random_access.flashcardsmanager.storage.FlashCardsProvider;
 
 /**
  * Project: FlashCards Manager for Android
@@ -13,6 +16,7 @@ import android.util.Log;
 public class ProjectContract {
 
     private static final String TAG = ProjectContract.class.getSimpleName();
+    public static final Uri  CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + ProjectContract.ProjectEntry.TABLE_NAME);
 
     // prevent instantiation
     private ProjectContract() {}

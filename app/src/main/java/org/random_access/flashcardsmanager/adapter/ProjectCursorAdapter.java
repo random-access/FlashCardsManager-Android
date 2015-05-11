@@ -46,6 +46,7 @@ public class ProjectCursorAdapter extends CursorAdapter{
         tvProjectTitle.setText(projectTitle);
     }
 
+
     private void setStatusDrawable(int status, ImageView view) {
         // TODO: replace this fake method with a real one
         switch(status) {

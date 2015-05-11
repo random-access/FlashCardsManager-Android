@@ -23,7 +23,7 @@ import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
  */
 public class FlashCardsProvider extends ContentProvider {
 
-    private static final String AUTHORITY = "org.random_access.flashcardsmanager.provider";
+    public static final String AUTHORITY = "org.random_access.flashcardsmanager.provider";
 
     private FlashCardDbOpenHelper flashCardDbOpenHelper;
 

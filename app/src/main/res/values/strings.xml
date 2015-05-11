@@ -25,8 +25,8 @@
     <string name="l_add_success">Label added successfully!</string>
     <string name="l_edit_success">Label edited successfully!</string>
 
-    <string name="title">title</string>
-    <string name="stacks">number of stacks</string>
+    <string name="title">Title</string>
+    <string name="stacks">Stacks</string>
 
     <string name="learn">Learn</string>
 
@@ -35,6 +35,10 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <string name="error_empty_field">Field can not be empty!</string>
+    <string name="error_enter_number">Please enter a number!</string>
+    <string name="error_invalid_stacks">Invalid number of stacks!</string>
 
     <plurals name="really_delete_project">
         <item quantity="one">Really delete %d project?</item> ,

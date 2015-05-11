@@ -49,7 +49,8 @@
         android:layout_alignBottom="@id/p_add_stacktext"
         android:layout_alignTop="@id/p_add_stacktext"
         android:layout_toEndOf="@id/p_add_stacktext"
-        android:layout_toRightOf="@id/p_add_stacktext" />
+        android:layout_toRightOf="@id/p_add_stacktext"
+        />
 
 
     <EditText

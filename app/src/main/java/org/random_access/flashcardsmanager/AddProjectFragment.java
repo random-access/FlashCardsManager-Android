@@ -11,10 +11,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -40,29 +41,67 @@ public class AddProjectFragment extends DialogFragment {
         res = getResources();
         title = (EditText)dialogView.findViewById(R.id.p_add_title);
         stacks = (EditText)dialogView.findViewById(R.id.p_add_stack);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setTitle(res.getString(R.string.p_add))
-                .setView(dialogView)
-                .setPositiveButton(res.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String pTitle = title.getText().toString();
-                        int pStacks = Integer.parseInt(stacks.getText().toString());
-                        // TODO add data
-                        ContentValues values = new ContentValues();
-                        values.put(ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_TITLE, pTitle);
-                        values.put(ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_STACKS, pStacks);
-                        getActivity().getContentResolver().insert(Uri.parse(Keys.BASE_URI + "/" + ProjectContract.ProjectEntry.TABLE_NAME), values);
-                        ((MainActivity)getActivity()).updateUI();
-                        Toast.makeText(getActivity(), res.getString(R.string.p_add_success), Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNeutralButton(res.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        AddProjectFragment.this.getDialog().cancel();
-                    }
-                });
-        return builder.create();
+        title.requestFocus();
+        MyAlertDialog dialog = new MyAlertDialog(getActivity(), getResources().getString(R.string.p_add), dialogView);
+        return dialog;
     }
+
+    /**
+     * Hack to keep dialog open when input is wrong. Needs improvement, but at least it works like expected.
+     */
+    private class MyAlertDialog extends AlertDialog {
+
+        public MyAlertDialog(Context context, String title, View view) {
+            super(context);
+            setTitle(title);
+            setView(view);
+            setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok), (new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // this will never be called
+                }
+            }));
+            setButton(AlertDialog.BUTTON_NEUTRAL, getResources().getString(R.string.cancel), (new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dismiss();
+                }
+            }));
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String pTitle = title.getText().toString();
+                    String pStacks = stacks.getText().toString();
+                    handleDialogInput(pTitle, pStacks);
+                }
+            });
+        }
+
+        private void handleDialogInput(String pTitle, String pStacks) {
+            if (TextUtils.isEmpty(pTitle)) {
+                title.setError(res.getString(R.string.error_empty_field));
+            } else if (TextUtils.isEmpty(pStacks)) {
+                stacks.setError(res.getString(R.string.error_enter_number));
+            } else {
+                int noOfStacks = Integer.parseInt(pStacks);
+                if (noOfStacks > 15 || noOfStacks < 1) {
+                    stacks.setError(res.getString(R.string.error_invalid_stacks) + " (1 - 15)");
+                } else {
+                    ContentValues values = new ContentValues();
+                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_TITLE, pTitle);
+                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_STACKS, noOfStacks);
+                    getActivity().getContentResolver().insert(ProjectContract.CONTENT_URI, values);
+                    Toast.makeText(getActivity(), res.getString(R.string.p_add_success), Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }
+            }
+        }
+    }
+
 }
