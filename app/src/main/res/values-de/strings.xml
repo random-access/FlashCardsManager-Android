@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FlashCardsManager</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="c_add">Karte hinzufügen</string>
+    <string name="c_add_success">Karte erfolgreich hinzugefügt!</string>
+    <string name="c_answer">Antwort</string>
+    <string name="c_delete">Karte löschen</string>
+    <string name="c_edit">Karte bearbeiten</string>
+    <string name="c_edit_success">Karte erfolgreich bearbeitet</string>
+    <string name="c_question">Frage</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="delete">Löschen</string>
+    <string name="hello_world">Hallo Welt!</string>
+    <string name="l_add">Label hinzufügen</string>
+    <string name="l_add_success">Label erfolgreich hinzugefügt!</string>
+    <string name="l_delete">Label löschen</string>
+    <string name="l_edit">Label bearbeiten</string>
+    <string name="l_edit_success">Label erfolgreich hinzugefügt!</string>
+    <string name="learn">Lernen</string>
+    <string name="no">Nein</string>
+    <string name="ok">OK</string>
+    <string name="p_add">Projekt hinzufügen</string>
+    <string name="p_add_success">Projekt erfolgreich hinzugefügt</string>
+    <string name="p_delete">Projekt löschen</string>
+    <string name="p_edit">Projekt bearbeiten</string>
+    <string name="p_edit_success">Projekt erfolgreich hinzugefügt!</string>
+    <string name="yes">Ja</string>
+</resources>

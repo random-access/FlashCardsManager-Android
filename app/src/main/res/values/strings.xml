@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">FlashCardsManager</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="p_add">Add project</string>
+    <string name="p_edit">Edit project</string>
+    <string name="p_delete">Delete project</string>
+    <string name="p_add_success">Project added successfully!</string>
+    <string name="p_edit_success">Project edited successfully!</string>
+
+    <string name="c_add">Add card</string>
+    <string name="c_edit">Edit card</string>
+    <string name="c_delete">Delete card</string>
+    <string name="c_question">Question</string>
+    <string name="c_answer">Answer</string>
+    <string name="c_add_success">Card added successfully!</string>
+    <string name="c_edit_success">Card edited successfully!</string>
+
+    <string name="l_add">Add label</string>
+    <string name="l_edit">Edit label</string>
+    <string name="l_delete">Delete label</string>
+    <string name="l_add_success">Label added successfully!</string>
+    <string name="l_edit_success">Label edited successfully!</string>
+
+    <string name="learn">Learn</string>
+
+    <string name="delete">Delete</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <plurals name="really_delete_project">
+        <item quantity="one">Really delete %d project?</item> ,
+        <item quantity="other">Really delete %d projects?</item>
+    </plurals>
+    <plurals name="deleted_project">
+        <item quantity="one">%d project deleted.</item> ,
+        <item quantity="other">%d projects deleted.</item>
+    </plurals>
+    <plurals name="really_delete_card">
+        <item quantity="one">Really delete %d card?</item> ,
+        <item quantity="other">Really delete %d cards?</item>
+    </plurals>
+    <plurals name="deleted_card">
+        <item quantity="one">%d card deleted.</item> ,
+        <item quantity="other">%d cards deleted.</item>
+    </plurals>
+
+</resources>
