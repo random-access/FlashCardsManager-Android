@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,11 +28,13 @@ import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
  * Author: Monika Schrenk
  * E-Mail: software@random-access.org
  */
-public class MainActivity extends AppCompatActivity implements
+public class DisplayProjectsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = DisplayProjectsActivity.class.getSimpleName();
     private static final String TAG_ADD_PROJECT = "add-project";
+
+    public static final String TAG_SHOW_LABELS = "show-labels";
 
     private ListView mProjectListView;
     private ProjectCursorAdapter mProjectAdapter;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_display_projects);
         mProjectListView = (ListView) findViewById(R.id.list_projects);
         mProjectListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         mProjectAdapter = new ProjectCursorAdapter(this, null);
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_display_projects, menu);
         return true;
     }
 
@@ -69,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements
                 AddProjectFragment addProjectFragment = AddProjectFragment.newInstance();
                 addProjectFragment.show(getFragmentManager(), TAG_ADD_PROJECT);
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements
                         getContentResolver().delete(ProjectContract.CONTENT_URI,
                                 ProjectContract.ProjectEntry._ID + "=?", new String[]{l + ""});
                     }
-                    Toast.makeText(MainActivity.this, getResources().
+                    Toast.makeText(DisplayProjectsActivity.this, getResources().
                             getQuantityString(R.plurals.deleted_project, selCount, selCount), Toast.LENGTH_SHORT).show();
                         // set count for deleting multiple projects
                     break;
@@ -140,6 +143,15 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     private void setListActions () {
+        mProjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(DisplayProjectsActivity.this, DisplayLabelsActivity.class);
+                intent.putExtra(TAG_SHOW_LABELS, id);
+                startActivity(intent);
+            }
+        });
+
         mProjectListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mProjectListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
@@ -159,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 switch (item.getItemId()) {
                     case R.id.action_edit_project:
-                            Toast.makeText(MainActivity.this, "Edit selected projects", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DisplayProjectsActivity.this, "Edit selected projects", Toast.LENGTH_SHORT).show();
                             mode.finish(); // Action picked, so close the CAB
                             return true;
                     case R.id.action_delete_project:

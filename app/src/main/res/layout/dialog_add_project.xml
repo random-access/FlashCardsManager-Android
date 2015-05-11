@@ -50,7 +50,7 @@
         android:layout_alignTop="@id/p_add_stacktext"
         android:layout_toEndOf="@id/p_add_stacktext"
         android:layout_toRightOf="@id/p_add_stacktext"
-        />
+        android:gravity="center_horizontal" />
 
 
     <EditText

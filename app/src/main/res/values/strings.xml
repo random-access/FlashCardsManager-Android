@@ -48,6 +48,14 @@
         <item quantity="one">%d project deleted.</item> ,
         <item quantity="other">%d projects deleted.</item>
     </plurals>
+    <plurals name="really_delete_label">
+        <item quantity="one">Really delete %d label?</item> ,
+        <item quantity="other">Really delete %d labels?</item>
+    </plurals>
+    <plurals name="deleted_label">
+        <item quantity="one">%d label deleted.</item> ,
+        <item quantity="other">%d labels deleted.</item>
+    </plurals>
     <plurals name="really_delete_card">
         <item quantity="one">Really delete %d card?</item> ,
         <item quantity="other">Really delete %d cards?</item>
@@ -56,5 +64,7 @@
         <item quantity="one">%d card deleted.</item> ,
         <item quantity="other">%d cards deleted.</item>
     </plurals>
+
+    <string name="title_activity_display_cards">DisplayCardsActivity</string>
 
 </resources>
