@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
-import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
 
 /**
  * Project: FlashCards Manager for Android
@@ -97,7 +96,7 @@ public class AddLabelFragment extends DialogFragment {
                 title.setError(res.getString(R.string.error_empty_field));
             } else {
                 ContentValues values = new ContentValues();
-                values.put(LabelContract.LabelEntry.COLUMN_NAME_LABEL_TITLE, lTitle);
+                values.put(LabelContract.LabelEntry.COLUMN_NAME_TITLE, lTitle);
                 values.put(LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID, mProjectId);
                 getActivity().getContentResolver().insert(LabelContract.CONTENT_URI, values);
                 Toast.makeText(getActivity(), res.getString(R.string.l_add_success), Toast.LENGTH_SHORT).show();

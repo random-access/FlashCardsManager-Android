@@ -25,6 +25,10 @@
         </activity>
         <activity
             android:name=".DisplayLabelsActivity"
+            android:label="@string/title_activity_display_labels" >
+        </activity>
+        <activity
+            android:name=".DisplayCardsActivity"
             android:label="@string/title_activity_display_cards" >
         </activity>
     </application>

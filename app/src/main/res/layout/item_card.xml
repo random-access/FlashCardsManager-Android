@@ -9,8 +9,6 @@
         android:id="@+id/id_card_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:layout_gravity="center_vertical"
         android:cropToPadding="false"
         android:src="@drawable/shape_circle_red" />

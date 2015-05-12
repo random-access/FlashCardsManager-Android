@@ -34,7 +34,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
     private static final String TAG = DisplayProjectsActivity.class.getSimpleName();
     private static final String TAG_ADD_PROJECT = "add-project";
 
-    public static final String TAG_SHOW_LABELS = "show-labels";
+    public static final String TAG_PROJECT_ID = "project-id";
 
     private ListView mProjectListView;
     private ProjectCursorAdapter mProjectAdapter;
@@ -86,8 +86,8 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] P_LIST_PROJECTION = { ProjectContract.ProjectEntry._ID,
-                ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_TITLE,
-                ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_STACKS };
+                ProjectContract.ProjectEntry.COLUMN_NAME_TITLE,
+                ProjectContract.ProjectEntry.COLUMN_NAME_STACKS};
         return new CursorLoader(this, ProjectContract.CONTENT_URI, P_LIST_PROJECTION, null, null, null);
     }
 
@@ -147,7 +147,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(DisplayProjectsActivity.this, DisplayLabelsActivity.class);
-                intent.putExtra(TAG_SHOW_LABELS, id);
+                intent.putExtra(TAG_PROJECT_ID, id);
                 startActivity(intent);
             }
         });

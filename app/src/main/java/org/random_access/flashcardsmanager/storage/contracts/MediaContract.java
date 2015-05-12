@@ -36,18 +36,22 @@ public class MediaContract {
 
         public static final String TABLE_NAME = "_TBL_MEDIA";
 
-        public static final String COLUMN_NAME_PATH_TO_MEDIA = "_MEDIA_PATH";
-        public static final String COLUMN_NAME_PIC_TYPE = "_PIC_TYPE";
-
+        public static final String COLUMN_NAME_MEDIAPATH = "_MEDIA_PATH";
+        public static final String COLUMN_NAME_PICTYPE = "_PIC_TYPE";
         public static final String COLUMN_NAME_FK_F_ID = "_FK_F_ID";
+
+        public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
+        public static final String COLUMN_NAME_MEDIAPATH_FULLNAME = TABLE_NAME  + "." + COLUMN_NAME_MEDIAPATH;
+        public static final String COLUMN_NAME_PICTYPE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_PICTYPE;
+        public static final String COLUMN_NAME_FK_F_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_F_ID;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
             + MediaEntry.TABLE_NAME
             + "("
             + MediaEntry._ID + " integer primary key autoincrement, "
-            + MediaEntry.COLUMN_NAME_PATH_TO_MEDIA + " text not null, "
-            + MediaEntry.COLUMN_NAME_PIC_TYPE + " text not null, "
+            + MediaEntry.COLUMN_NAME_MEDIAPATH + " text not null, "
+            + MediaEntry.COLUMN_NAME_PICTYPE + " text not null, "
             + MediaEntry.COLUMN_NAME_FK_F_ID + " integer, "
             + "foreign key (" + MediaEntry.COLUMN_NAME_FK_F_ID + ") references "
             + FlashCardContract.FlashCardEntry.TABLE_NAME + " (" + FlashCardContract.FlashCardEntry._ID + ")"

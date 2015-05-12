@@ -65,6 +65,7 @@
         <item quantity="other">%d cards deleted.</item>
     </plurals>
 
+    <string name="title_activity_display_labels">DisplayLabelsActivity</string>
     <string name="title_activity_display_cards">DisplayCardsActivity</string>
 
 </resources>

@@ -34,7 +34,7 @@ public class FlashCardsProvider extends ContentProvider {
     private static final int LFREL_TABLE = 4;
     private static final int MEDIA_TABLE = 5;
 
-    private static final int PROJECT_ROw = 10;
+    private static final int PROJECT_ROW = 10;
     private static final int LABEL_ROW = 11;
     private static final int FLASHCARD_ROW = 12;
     private static final int LFREL_ROW = 13;
@@ -49,7 +49,7 @@ public class FlashCardsProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, LFRelationContract.LFRelEntry.TABLE_NAME, LFREL_TABLE);
         uriMatcher.addURI(AUTHORITY, MediaContract.MediaEntry.TABLE_NAME, MEDIA_TABLE);
 
-        uriMatcher.addURI(AUTHORITY, ProjectContract.ProjectEntry.TABLE_NAME + "/#", PROJECT_ROw);
+        uriMatcher.addURI(AUTHORITY, ProjectContract.ProjectEntry.TABLE_NAME + "/#", PROJECT_ROW);
         uriMatcher.addURI(AUTHORITY, LabelContract.LabelEntry.TABLE_NAME + "/#", LABEL_ROW);
         uriMatcher.addURI(AUTHORITY, FlashCardContract.FlashCardEntry.TABLE_NAME + "/#", FLASHCARD_ROW);
         uriMatcher.addURI(AUTHORITY, LFRelationContract.LFRelEntry.TABLE_NAME + "/#", LFREL_ROW);
@@ -122,6 +122,7 @@ public class FlashCardsProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        // queryBuilder.setProjectionMap(null);
         int uriCode = uriMatcher.match(uri);
         String tableName = getTableName(uriCode);
         queryBuilder.setTables(tableName);
@@ -154,7 +155,7 @@ public class FlashCardsProvider extends ContentProvider {
     private String getTableName(int uriCode) {
         switch(uriCode) {
             case PROJECT_TABLE:
-            case PROJECT_ROw:
+            case PROJECT_ROW:
                 return ProjectContract.ProjectEntry.TABLE_NAME;
             case LABEL_TABLE:
             case LABEL_ROW:
@@ -181,7 +182,7 @@ public class FlashCardsProvider extends ContentProvider {
      */
     private String getTableIdColumn(int uriCode) {
         switch(uriCode){
-            case PROJECT_ROw:
+            case PROJECT_ROW:
                 return ProjectContract.ProjectEntry._ID;
             case LABEL_ROW:
                 return LabelContract.LabelEntry._ID;

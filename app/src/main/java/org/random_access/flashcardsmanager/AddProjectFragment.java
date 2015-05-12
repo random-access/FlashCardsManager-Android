@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -97,8 +96,8 @@ public class AddProjectFragment extends DialogFragment {
                     stacks.setError(res.getString(R.string.error_invalid_stacks) + " (1 - 15)");
                 } else {
                     ContentValues values = new ContentValues();
-                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_TITLE, pTitle);
-                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_PROJECT_STACKS, noOfStacks);
+                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_TITLE, pTitle);
+                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, noOfStacks);
                     getActivity().getContentResolver().insert(ProjectContract.CONTENT_URI, values);
                     Toast.makeText(getActivity(), res.getString(R.string.p_add_success), Toast.LENGTH_SHORT).show();
                     dismiss();

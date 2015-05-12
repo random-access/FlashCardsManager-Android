@@ -38,6 +38,10 @@ public class LFRelationContract {
 
         public static final String COLUMN_NAME_FK_L_ID = "_FK_L_ID";
         public static final String COLUMN_NAME_FK_F_ID = "_FK_F_ID";
+
+        public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
+        public static final String COLUMN_NAME_FK_P_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_F_ID;
+        public static final String COLUMN_NAME_FK_L_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_L_ID;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "

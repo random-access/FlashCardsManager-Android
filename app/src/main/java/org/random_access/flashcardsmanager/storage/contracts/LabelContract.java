@@ -36,16 +36,19 @@ public class LabelContract {
 
         public static final String TABLE_NAME = "_TBL_LABELS";
 
-        public static final String COLUMN_NAME_LABEL_TITLE = "_TITLE";
-
+        public static final String COLUMN_NAME_TITLE = "_TITLE";
         public static final String COLUMN_NAME_FK_P_ID = "_FK_P_ID";
+
+        public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
+        public static final String COLUMN_NAME_TITLE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_TITLE;
+        public static final String COLUMN_NAME_FK_P_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_P_ID;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
             + LabelEntry.TABLE_NAME
             + "("
             + LabelEntry._ID + " integer primary key autoincrement, "
-            + LabelEntry.COLUMN_NAME_LABEL_TITLE + " text not null, "
+            + LabelEntry.COLUMN_NAME_TITLE + " text not null, "
             + LabelEntry.COLUMN_NAME_FK_P_ID + " integer, "
             + "foreign key (" + LabelEntry.COLUMN_NAME_FK_P_ID + ") references "
             +  ProjectContract.ProjectEntry.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"

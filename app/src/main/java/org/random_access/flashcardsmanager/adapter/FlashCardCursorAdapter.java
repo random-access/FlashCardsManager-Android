@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,33 +13,33 @@ import org.random_access.flashcardsmanager.R;
 
 /**
  * Project: FlashCards Manager for Android
- * Date: 12.05.15
+ * Date: 11.05.15
  * Author: Monika Schrenk
  * E-Mail: software@random-access.org
  */
-public class LabelCursorAdapter extends CursorAdapter {
+public class FlashCardCursorAdapter extends CursorAdapter{
 
-    public LabelCursorAdapter(Context context, Cursor cursor) {
+    public FlashCardCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.item_label, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.item_card, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // get view references
-        ImageView imgStatus = (ImageView) view.findViewById(R.id.id_label_status);
-        TextView tvProjectTitle = (TextView) view.findViewById(R.id.id_label_text);
+        ImageView imgStatus = (ImageView) view.findViewById(R.id.id_card_status);
+        TextView txtQuestion = (TextView) view.findViewById(R.id.id_card_title);
 
         // get data
-        String projectTitle = cursor.getString(1);
+        String cardTitle = cursor.getString(1);
 
-        // bind data to view
+        // bind view to data
         setStatusDrawable(0, imgStatus);
-        tvProjectTitle.setText(projectTitle);
+        txtQuestion.setText(cardTitle);
     }
 
     private void setStatusDrawable(int status, ImageView view) {

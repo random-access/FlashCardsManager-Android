@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,20 +13,28 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.adapter.LabelCursorAdapter;
 import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
-import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
 
-
+/**
+ * Project: FlashCards Manager for Android
+ * Date: 11.05.15
+ * Author: Monika Schrenk
+ * E-Mail: software@random-access.org
+ */
 public class DisplayLabelsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = DisplayLabelsActivity.class.getSimpleName();
     private static final String TAG_ADD_LABEL = "add-label";
+
+    public static final String TAG_LABEL_ID = "show-cards";
 
     private ListView mLabelListView;
     private LabelCursorAdapter mLabelAdapter;
@@ -35,7 +44,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCurrentProject = getIntent().getExtras().getLong(DisplayProjectsActivity.TAG_SHOW_LABELS);
+        mCurrentProject = getIntent().getExtras().getLong(DisplayProjectsActivity.TAG_PROJECT_ID);
         setTitle("Labels");
         setContentView(R.layout.activity_display_labels);
         mLabelListView = (ListView) findViewById(R.id.list_labels);
@@ -83,7 +92,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] L_LIST_PROJECTION = { LabelContract.LabelEntry._ID,
-                LabelContract.LabelEntry.COLUMN_NAME_LABEL_TITLE };
+                LabelContract.LabelEntry.COLUMN_NAME_TITLE};
         return new CursorLoader(this, LabelContract.CONTENT_URI, L_LIST_PROJECTION,
                 LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + "=?", new String[] {mCurrentProject + ""}, null);
     }
@@ -142,6 +151,16 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
 
 
     private void setListActions() {
+        mLabelListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(DisplayLabelsActivity.this, DisplayCardsActivity.class);
+                intent.putExtra(DisplayProjectsActivity.TAG_PROJECT_ID, mCurrentProject);
+                intent.putExtra(TAG_LABEL_ID, id);
+                startActivity(intent);
+            }
+        });
+
         mLabelListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mLabelListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
