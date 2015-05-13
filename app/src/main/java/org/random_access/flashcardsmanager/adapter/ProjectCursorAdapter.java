@@ -76,7 +76,7 @@ public class ProjectCursorAdapter extends CursorAdapter{
             String projectTitle = cursor.getString(1);
 
             // bind data to view
-            setStatusDrawable(0, imgStatus);
+            setStatusDrawable(position % 3, imgStatus);
             tvProjectTitle.setText(projectTitle);
         } else {
             // get views
@@ -88,6 +88,8 @@ public class ProjectCursorAdapter extends CursorAdapter{
             TextView tvCardInfo = (TextView) view.findViewById(R.id.text_cardinfo);
             ImageButton btnEdit = (ImageButton) view.findViewById(R.id.btn_edit);
             ImageButton btnOpen = (ImageButton) view.findViewById(R.id.btn_open);
+            ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btn_delete);
+            ImageButton btnLearn = (ImageButton) view.findViewById(R.id.btn_learn);
 
             // get data
             final long projectId = cursor.getLong(0);
@@ -116,6 +118,20 @@ public class ProjectCursorAdapter extends CursorAdapter{
                 Intent intent = new Intent(context, DisplayLabelsActivity.class);
                 intent.putExtra(DisplayProjectsActivity.TAG_PROJECT_ID, projectId);
                 context.startActivity(intent);
+                }
+            });
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Delete function - not yet implemented..", Toast.LENGTH_SHORT).show();
+                    // TODO implement
+                }
+            });
+            btnLearn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Learn function - not yet implemented..", Toast.LENGTH_SHORT).show();
+                    // TODO implement
                 }
             });
 

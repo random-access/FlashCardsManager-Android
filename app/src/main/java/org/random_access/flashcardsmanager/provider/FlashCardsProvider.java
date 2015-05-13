@@ -139,10 +139,10 @@ public class FlashCardsProvider extends ContentProvider {
             numberOfUpdates = sqlDB.update(tableName, values, selection, selectionArgs);
         } else {
             String id = uri.getLastPathSegment();
-            if (TextUtils.isEmpty(id)) {
-                numberOfUpdates = sqlDB.update(tableName, values, itemId + "=" + id, null);
+            if (TextUtils.isEmpty(selection)) {
+                numberOfUpdates = sqlDB.update(tableName, values, itemId + " = ? ", new String[]{id + ""});
             } else {
-                numberOfUpdates = sqlDB.update(tableName,values, itemId + "=" + id + " and "
+                numberOfUpdates = sqlDB.update(tableName, values, itemId + " = " +  id + " and "
                         + selection, selectionArgs);
             }
         }
@@ -188,8 +188,8 @@ public class FlashCardsProvider extends ContentProvider {
             queryBuilder.appendWhere(itemId + "="
                     + uri.getLastPathSegment());
         }
-        SQLiteDatabase db = flashCardDbOpenHelper.getReadableDatabase();
-        Cursor cursor = db.query(tableName, projection, selection,
+        SQLiteDatabase db = flashCardDbOpenHelper.getWritableDatabase();
+        Cursor cursor = queryBuilder.query(db, projection, selection,
                 selectionArgs, null, null, sortOrder);
         // notify listeners
             cursor.setNotificationUri(getContext().getContentResolver(), getNotificationUri(uriCode));

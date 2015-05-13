@@ -13,7 +13,7 @@ import android.net.Uri;
 public class QueryHelper {
 
     public static int count(Context context, Uri uri,String selection,String[] selectionArgs) {
-        Cursor cursor = context.getContentResolver().query(uri,new String[] {"count(*)"},
+        Cursor cursor = context.getContentResolver().query(uri,new String[] {"count(*) AS count"},
                 selection, selectionArgs, null);
         if (cursor.getCount() == 0) {
             cursor.close();

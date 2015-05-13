@@ -93,7 +93,7 @@ public class DisplayCardsActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String[] C_LIST_PROJECTION = {FlashCardContract.FlashCardEntry.COLUMN_NAME_ID_FULLNAME,
+        String[] C_LIST_PROJECTION = {FlashCardContract.FlashCardEntry._ID,
                 FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION};
         return new CursorLoader(this, DbJoins.CONTENT_URI_FLASHCARDS_JOIN_LFRELS, C_LIST_PROJECTION,
                 LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID + " = ? ", new String[]{mCurrentLabel + ""}, null); // TODO check if possible...

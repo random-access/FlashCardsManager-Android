@@ -62,11 +62,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignRight="@id/p_add_descriptiontext"
-
         android:layout_alignTop="@id/p_add_descriptiontext"
         android:layout_toEndOf="@id/p_add_descriptiontext"
-        android:layout_toRightOf="@id/p_add_descriptiontext"
-        android:gravity="center_horizontal" />
+        android:layout_toRightOf="@id/p_add_descriptiontext"/>
 
 
     <EditText

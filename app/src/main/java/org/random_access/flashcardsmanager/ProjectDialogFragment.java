@@ -29,6 +29,8 @@ import org.random_access.flashcardsmanager.queries.ProjectQuery;
 
 public class ProjectDialogFragment extends DialogFragment {
 
+    private static final String TAG = ProjectDialogFragment.class.getSimpleName();
+
     private static final String TAG_IS_NEW_PROJECT = "is-new-project";
     private static final String TAG_PROJECT_ID = "project-id";
 
@@ -53,6 +55,7 @@ public class ProjectDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mIsNewProject = getArguments().getBoolean(TAG_IS_NEW_PROJECT);
         mProjectId = getArguments().getLong(TAG_PROJECT_ID);
+        Log.d(TAG, "bundle project id = " + mProjectId);
         inflater = getActivity().getLayoutInflater();
         dialogView = inflater.inflate(R.layout.dialog_add_project, null);
         res = getResources();
@@ -63,6 +66,7 @@ public class ProjectDialogFragment extends DialogFragment {
             Cursor cursor = new ProjectQuery(getActivity()).getProjectWithId(mProjectId);
             cursor.moveToFirst();
             title.setText(cursor.getString(1));
+            Log.d(TAG, "current title = " + cursor.getString(1));
             description.setText(cursor.getString(2));
             stacks.setText(cursor.getInt(3) + "");
             cursor.close();
