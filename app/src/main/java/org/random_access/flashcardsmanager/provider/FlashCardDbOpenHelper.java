@@ -1,15 +1,15 @@
-package org.random_access.flashcardsmanager.storage;
+package org.random_access.flashcardsmanager.provider;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import org.random_access.flashcardsmanager.storage.contracts.FlashCardContract;
-import org.random_access.flashcardsmanager.storage.contracts.LFRelationContract;
-import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
-import org.random_access.flashcardsmanager.storage.contracts.MediaContract;
-import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
+import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
+import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
 
 /**
  * Project: FlashCards Manager for Android

@@ -15,7 +15,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
+import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
 
 /**
  * Project: FlashCards Manager for Android

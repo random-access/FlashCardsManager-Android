@@ -1,8 +1,8 @@
-package org.random_access.flashcardsmanager.storage.contracts;
+package org.random_access.flashcardsmanager.provider.contracts;
 
 import android.net.Uri;
 
-import org.random_access.flashcardsmanager.storage.FlashCardsProvider;
+import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 
 /**
  * Project: FlashCards Manager for Android

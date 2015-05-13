@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,7 +20,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.adapter.ProjectCursorAdapter;
-import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
 
 /**
  * Project: FlashCards Manager for Android
@@ -70,7 +69,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
             case R.id.action_settings:
                 return true;
             case R.id.action_add_project:
-                AddProjectFragment addProjectFragment = AddProjectFragment.newInstance();
+                ProjectDialogFragment addProjectFragment = ProjectDialogFragment.newInstance(true, -1);
                 addProjectFragment.show(getFragmentManager(), TAG_ADD_PROJECT);
                 return true;
             default:
@@ -89,6 +88,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] P_LIST_PROJECTION = { ProjectContract.ProjectEntry._ID,
                 ProjectContract.ProjectEntry.COLUMN_NAME_TITLE,
+                ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION,
                 ProjectContract.ProjectEntry.COLUMN_NAME_STACKS};
         return new CursorLoader(this, ProjectContract.CONTENT_URI, P_LIST_PROJECTION, null, null, null);
     }
@@ -149,9 +149,14 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
         mProjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(DisplayProjectsActivity.this, DisplayLabelsActivity.class);
-                intent.putExtra(TAG_PROJECT_ID, id);
-                startActivity(intent);
+                if (mProjectAdapter.getmCurrentDetailPosition() == -1) {
+                    mProjectAdapter.setmCurrentDetailPosition(position);
+                } else if (mProjectAdapter.getmCurrentDetailPosition() == position){
+                    mProjectAdapter.setmCurrentDetailPosition(-1);
+                } else {
+                    mProjectAdapter.setmCurrentDetailPosition(position);
+                }
+                Log.d(TAG, "Set mCurrentDetailView to " + mProjectAdapter.getmCurrentDetailPosition());
             }
         });
 
@@ -173,10 +178,6 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.action_edit_project:
-                            Toast.makeText(DisplayProjectsActivity.this, "Edit selected projects", Toast.LENGTH_SHORT).show();
-                            mode.finish(); // Action picked, so close the CAB
-                            return true;
                     case R.id.action_delete_project:
                         deleteSelectedProjects();
                         mode.finish(); // Action picked, so close the CAB

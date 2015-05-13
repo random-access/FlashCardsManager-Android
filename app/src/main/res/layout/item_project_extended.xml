@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/p_ext_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Projekt Test"
+        android:textSize="10pt"
+        android:textColor="@color/black"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+
+    <ImageView
+        android:id="@+id/image_progress"
+        android:background="@drawable/shape_project_progress"
+        android:src="@color/grey"
+        android:layout_height="20dp"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/p_ext_title" />
+
+
+    <TextView
+        android:id="@+id/p_ext_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_progress"
+        android:text="Hier eine Beschreibung die über mehrere Zeilen geht weil sie so lang ist."
+        android:textSize="8pt"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/text_stackinfo"
+        android:layout_below="@id/p_ext_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stacks: 3"
+        android:textSize="8pt"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/text_cardinfo"
+        android:layout_below="@id/p_ext_description"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cards: 47"
+        android:textSize="8pt"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+
+
+    <ImageButton
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_cardinfo"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_edit_disabled"
+        android:padding="10dp"/>
+
+    <ImageButton
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_cardinfo"
+        android:layout_toRightOf="@id/btn_edit"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_delete_disabled"
+        android:padding="10dp"/>
+
+    <ImageButton
+        android:id="@+id/btn_learn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_cardinfo"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_play_disabled"
+        android:padding="10dp"/>
+
+    <ImageButton
+        android:id="@+id/btn_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_cardinfo"
+        android:layout_toLeftOf="@id/btn_learn"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_open_grey"
+        android:padding="10dp"/>
+
+
+
+</RelativeLayout>

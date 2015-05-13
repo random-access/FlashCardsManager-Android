@@ -1,4 +1,4 @@
-package org.random_access.flashcardsmanager.storage;
+package org.random_access.flashcardsmanager.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -9,12 +9,12 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import org.random_access.flashcardsmanager.storage.contracts.DbJoins;
-import org.random_access.flashcardsmanager.storage.contracts.FlashCardContract;
-import org.random_access.flashcardsmanager.storage.contracts.LFRelationContract;
-import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
-import org.random_access.flashcardsmanager.storage.contracts.MediaContract;
-import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
+import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
+import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
+import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
 
 import java.util.HashMap;
 
@@ -79,6 +79,7 @@ public class FlashCardsProvider extends ContentProvider {
         PROJECTION_MAP_PROJECTS = new HashMap<>();
         PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry._ID, ProjectContract.ProjectEntry.COLUMN_NAME_ID_FULLNAME);
         PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_TITLE, ProjectContract.ProjectEntry.COLUMN_NAME_TITLE_FULLNAME);
+        PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION, ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION_FULLNAME);
         PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, ProjectContract.ProjectEntry.COLUMN_NAMEß_STACKS_FULLNAME);
 
         PROJECTION_MAP_LABELS = new HashMap<>();
@@ -191,18 +192,38 @@ public class FlashCardsProvider extends ContentProvider {
         Cursor cursor = db.query(tableName, projection, selection,
                 selectionArgs, null, null, sortOrder);
         // notify listeners
-        if (uriCode == FLASHCARDS_FROM_LABELS || uriCode == FLASHCARDS_FROM_LABELS_ROW) {
-            cursor.setNotificationUri(getContext().getContentResolver(), FlashCardContract.CONTENT_URI); //TODO
-        } else {
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        }
+            cursor.setNotificationUri(getContext().getContentResolver(), getNotificationUri(uriCode));
         return cursor;
     }
 
     @Override
     public String getType(Uri uri) {
-        // we don't specify a MIME type here, leaving this as is
+        // TODO think about name of mime type
         return null;
+    }
+
+    private Uri getNotificationUri(int uriCode) {
+        switch (uriCode) {
+            case PROJECT_TABLE:
+            case PROJECT_ROW:
+                return ProjectContract.CONTENT_URI;
+            case LABEL_TABLE:
+            case LABEL_ROW:
+                return LabelContract.CONTENT_URI;
+            case FLASHCARD_TABLE:
+            case FLASHCARD_ROW:
+            case FLASHCARDS_FROM_LABELS:
+            case FLASHCARDS_FROM_LABELS_ROW:
+                return FlashCardContract.CONTENT_URI;
+            case LFREL_TABLE:
+            case LFREL_ROW:
+                return LFRelationContract.CONTENT_URI;
+            case MEDIA_TABLE:
+            case MEDIA_ROW:
+                return MediaContract.CONTENT_URI;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uriCode);
+        }
     }
 
     /**

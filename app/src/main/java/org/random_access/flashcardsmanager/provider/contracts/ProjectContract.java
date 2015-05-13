@@ -1,11 +1,11 @@
-package org.random_access.flashcardsmanager.storage.contracts;
+package org.random_access.flashcardsmanager.provider.contracts;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import org.random_access.flashcardsmanager.storage.FlashCardsProvider;
+import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 
 /**
  * Project: FlashCards Manager for Android
@@ -36,10 +36,12 @@ public class ProjectContract {
         public static final String TABLE_NAME = "_TBL_PROJECTS";
 
         public static final String COLUMN_NAME_TITLE = "_TITLE";
+        public static final String COLUMN_NAME_DESCRIPTION = "_DESCRIPTION";
         public static final String COLUMN_NAME_STACKS = "_STACKS";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_TITLE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_TITLE;
+        public static final String COLUMN_NAME_DESCRIPTION_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_DESCRIPTION;
         public static final String COLUMN_NAMEß_STACKS_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_STACKS;
     }
 
@@ -48,6 +50,7 @@ public class ProjectContract {
             + "("
             + ProjectEntry._ID + " integer primary key autoincrement, "
             + ProjectEntry.COLUMN_NAME_TITLE + " text not null, "
+            + ProjectEntry.COLUMN_NAME_DESCRIPTION + " text, "
             + ProjectEntry.COLUMN_NAME_STACKS + " integer not null"
             + ");";
 

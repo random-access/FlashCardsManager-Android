@@ -10,17 +10,14 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.random_access.flashcardsmanager.storage.FlashCardsProvider;
-import org.random_access.flashcardsmanager.storage.contracts.FlashCardContract;
-import org.random_access.flashcardsmanager.storage.contracts.LFRelationContract;
-import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
+import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
 
 /**
  * Project: FlashCards Manager for Android

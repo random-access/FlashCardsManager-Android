@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,17 +13,14 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.adapter.FlashCardCursorAdapter;
-import org.random_access.flashcardsmanager.storage.contracts.DbJoins;
-import org.random_access.flashcardsmanager.storage.contracts.FlashCardContract;
-import org.random_access.flashcardsmanager.storage.contracts.LFRelationContract;
-import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
+import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
+import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
 
 /**
  * Project: FlashCards Manager for Android

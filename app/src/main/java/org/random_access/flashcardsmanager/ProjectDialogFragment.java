@@ -14,34 +14,59 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.random_access.flashcardsmanager.storage.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.queries.ProjectQuery;
 
-public class AddProjectFragment extends DialogFragment {
+public class ProjectDialogFragment extends DialogFragment {
+
+    private static final String TAG_IS_NEW_PROJECT = "is-new-project";
+    private static final String TAG_PROJECT_ID = "project-id";
+
+    private boolean mIsNewProject;
+    private long mProjectId;
+
     Resources res;
     LayoutInflater inflater;
     View dialogView;
-    EditText title;
-    EditText stacks;
+    EditText title, stacks, description;
 
-    public static AddProjectFragment newInstance() {
-        return new AddProjectFragment();
+    public static ProjectDialogFragment newInstance(boolean isNewProject, long projectId) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(TAG_IS_NEW_PROJECT, isNewProject);
+        bundle.putLong(TAG_PROJECT_ID, projectId);
+        ProjectDialogFragment fragment = new ProjectDialogFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        mIsNewProject = getArguments().getBoolean(TAG_IS_NEW_PROJECT);
+        mProjectId = getArguments().getLong(TAG_PROJECT_ID);
         inflater = getActivity().getLayoutInflater();
         dialogView = inflater.inflate(R.layout.dialog_add_project, null);
         res = getResources();
         title = (EditText)dialogView.findViewById(R.id.p_add_title);
         stacks = (EditText)dialogView.findViewById(R.id.p_add_stack);
+        description = (EditText)dialogView.findViewById(R.id.p_add_description);
+        if (!mIsNewProject) {
+            Cursor cursor = new ProjectQuery(getActivity()).getProjectWithId(mProjectId);
+            cursor.moveToFirst();
+            title.setText(cursor.getString(1));
+            description.setText(cursor.getString(2));
+            stacks.setText(cursor.getInt(3) + "");
+            cursor.close();
+        }
         title.requestFocus();
         MyAlertDialog d = new MyAlertDialog(getActivity(), getResources().getString(R.string.p_add), dialogView);
         d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -79,13 +104,14 @@ public class AddProjectFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     String pTitle = title.getText().toString();
+                    String pDescription = description.getText().toString();
                     String pStacks = stacks.getText().toString();
-                    handleDialogInput(pTitle, pStacks);
+                    handleDialogInput(pTitle, pDescription, pStacks);
                 }
             });
         }
 
-        private void handleDialogInput(String pTitle, String pStacks) {
+        private void handleDialogInput(String pTitle, String pDescription, String pStacks) {
             if (TextUtils.isEmpty(pTitle)) {
                 title.setError(res.getString(R.string.error_empty_field));
             } else if (TextUtils.isEmpty(pStacks)) {
@@ -95,11 +121,13 @@ public class AddProjectFragment extends DialogFragment {
                 if (noOfStacks > 15 || noOfStacks < 1) {
                     stacks.setError(res.getString(R.string.error_invalid_stacks) + " (1 - 15)");
                 } else {
-                    ContentValues values = new ContentValues();
-                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_TITLE, pTitle);
-                    values.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, noOfStacks);
-                    getActivity().getContentResolver().insert(ProjectContract.CONTENT_URI, values);
-                    Toast.makeText(getActivity(), res.getString(R.string.p_add_success), Toast.LENGTH_SHORT).show();
+                    if (mIsNewProject) {
+                        new ProjectQuery(getActivity()).insertProject(pTitle, pDescription, noOfStacks);
+                        Toast.makeText(getActivity(), res.getString(R.string.p_add_success), Toast.LENGTH_SHORT).show();
+                    } else {
+                        new ProjectQuery(getActivity()).updateProjectWithId(mProjectId, pTitle, pDescription, noOfStacks);
+                        Toast.makeText(getActivity(), res.getString(R.string.p_edit_success), Toast.LENGTH_SHORT).show();
+                    }
                     dismiss();
                 }
             }

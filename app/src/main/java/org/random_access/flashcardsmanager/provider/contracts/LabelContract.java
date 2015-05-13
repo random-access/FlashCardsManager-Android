@@ -1,11 +1,11 @@
-package org.random_access.flashcardsmanager.storage.contracts;
+package org.random_access.flashcardsmanager.provider.contracts;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import org.random_access.flashcardsmanager.storage.FlashCardsProvider;
+import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 
 /**
  * Project: FlashCards Manager for Android
