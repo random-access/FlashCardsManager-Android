@@ -31,4 +31,33 @@
     <string name="error_invalid_stacks">Ungültige Stapelanzahl!</string>
     <string name="stacks">Stapel</string>
     <string name="title">Titel</string>
+    <string name="c_answer_hint">Antwort eingeben</string>
+    <string name="c_question_hint">Frage eingeben</string>
+    <string name="title_activity_display_cards">DisplayCardsActivity</string>
+    <string name="title_activity_display_labels">DisplayLabelsActivity</string>
+
+    <plurals name="really_delete_project">
+        <item quantity="one">Wirklich %d Projekt löschen?</item> ,
+        <item quantity="other">Wirkleich %d Projekte löschen?</item>
+    </plurals>
+    <plurals name="deleted_project">
+        <item quantity="one">%d Projekt gelöscht.</item> ,
+        <item quantity="other">%d Projekte gelöscht.</item>
+    </plurals>
+    <plurals name="really_delete_label">
+        <item quantity="one">Wirklich %d Label löschen?</item> ,
+        <item quantity="other">Wirklich %d Label löschen?</item>
+    </plurals>
+    <plurals name="deleted_label">
+        <item quantity="one">%d Label gelöscht.</item> ,
+        <item quantity="other">%d Label gelöscht.</item>
+    </plurals>
+    <plurals name="really_delete_card">
+        <item quantity="one">Wirklich %d Karte löschen?</item> ,
+        <item quantity="other">Wirklich %d Karten löschen?</item>
+    </plurals>
+    <plurals name="deleted_card">
+        <item quantity="one">%d Karte gelöscht.</item> ,
+        <item quantity="other">%d Karten gelöscht.</item>
+    </plurals>
 </resources>

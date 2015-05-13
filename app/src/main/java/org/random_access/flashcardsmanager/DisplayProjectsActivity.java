@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +43,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "in onCreate");
         setContentView(R.layout.activity_display_projects);
         mProjectListView = (ListView) findViewById(R.id.list_projects);
         mProjectListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -93,6 +95,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "in onLoadFinished");
         mProjectAdapter.swapCursor(data);
     }
 

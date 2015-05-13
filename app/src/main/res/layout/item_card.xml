@@ -3,6 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/colorselector_list_item"
     android:padding="10dp">
 
     <ImageView
@@ -20,7 +21,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="8pt"
-        android:text="Eine kleine Testkarte"
         android:layout_gravity="center_vertical"
         android:lines="1"
         android:ellipsize="end"/>

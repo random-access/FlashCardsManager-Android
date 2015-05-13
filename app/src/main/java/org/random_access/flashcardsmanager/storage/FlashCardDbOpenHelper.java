@@ -25,7 +25,7 @@ public class FlashCardDbOpenHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "FLASHCARDSMANAGER.db";
 
     public FlashCardDbOpenHelper(Context context) {
-        super(context,DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     /**
@@ -56,4 +56,5 @@ public class FlashCardDbOpenHelper extends SQLiteOpenHelper {
         LFRelationContract.onUpdate(db, oldVersion, newVersion);
         MediaContract.onUpdate(db, oldVersion, newVersion);
     }
+
 }

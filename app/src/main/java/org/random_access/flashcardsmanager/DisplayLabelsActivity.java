@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +45,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "in OnCreate");
         mCurrentProject = getIntent().getExtras().getLong(DisplayProjectsActivity.TAG_PROJECT_ID);
         setTitle("Labels");
         setContentView(R.layout.activity_display_labels);
@@ -99,6 +101,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "in onLoadFinished");
         mLabelAdapter.swapCursor(data);
     }
 

@@ -17,7 +17,7 @@ import org.random_access.flashcardsmanager.R;
  * Author: Monika Schrenk
  * E-Mail: software@random-access.org
  */
-public class FlashCardCursorAdapter extends CursorAdapter{
+public class FlashCardCursorAdapter extends CursorAdapter {
 
     public FlashCardCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);

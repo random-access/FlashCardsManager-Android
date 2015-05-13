@@ -1,19 +1,30 @@
 package org.random_access.flashcardsmanager;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.adapter.FlashCardCursorAdapter;
+import org.random_access.flashcardsmanager.storage.contracts.DbJoins;
 import org.random_access.flashcardsmanager.storage.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.storage.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.storage.contracts.LabelContract;
 
 /**
  * Project: FlashCards Manager for Android
@@ -34,8 +45,9 @@ public class DisplayCardsActivity extends AppCompatActivity implements
     private long mCurrentLabel;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "in oncreate");
         Bundle extras = getIntent().getExtras();
         mCurrentProject = extras.getLong(DisplayProjectsActivity.TAG_PROJECT_ID);
         mCurrentLabel = extras.getLong(DisplayLabelsActivity.TAG_LABEL_ID);
@@ -68,8 +80,8 @@ public class DisplayCardsActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_add_card:
                 // TODO
-               /* AddCardFragment addLabelFragment = AddCardFragment.newInstance(mCurrentProject);
-                addLabelFragment.show(getFragmentManager(), TAG_ADD_CARD)*/;
+                AddCardFragment addCardFragment = AddCardFragment.newInstance(mCurrentProject, mCurrentLabel);
+                addCardFragment.show(getFragmentManager(), TAG_ADD_CARD);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -85,14 +97,15 @@ public class DisplayCardsActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String[] C_LIST_PROJECTION = { FlashCardContract.FlashCardEntry._ID,
+        String[] C_LIST_PROJECTION = {FlashCardContract.FlashCardEntry.COLUMN_NAME_ID_FULLNAME,
                 FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION};
-        return new CursorLoader(this, FlashCardContract.CONTENT_URI, C_LIST_PROJECTION,
-                null, null, null); // TODO change
+        return new CursorLoader(this, DbJoins.CONTENT_URI_FLASHCARDS_JOIN_LFRELS, C_LIST_PROJECTION,
+                LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID + " = ? ", new String[]{mCurrentLabel + ""}, null); // TODO check if possible...
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "in onLoadFinished");
         mCardAdapter.swapCursor(data);
     }
 
@@ -101,7 +114,94 @@ public class DisplayCardsActivity extends AppCompatActivity implements
         mCardAdapter.swapCursor(null);
     }
 
+
+
+    private void deleteSelectedCards() {
+        long[] currentSelections = mCardListView.getCheckedItemIds();
+        OnDeleteCardsDialogListener dialogClickListener = new OnDeleteCardsDialogListener(currentSelections);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setNeutralButton(getResources().getString(R.string.no), dialogClickListener)
+                .setPositiveButton(getResources().getString(R.string.yes), dialogClickListener)
+                .setTitle(getResources().getString(R.string.delete))
+                .setMessage(getResources().getQuantityString(R.plurals.really_delete_card, currentSelections.length, currentSelections.length))
+                .setCancelable(false);
+        builder.show();
+    }
+
+    class OnDeleteCardsDialogListener implements DialogInterface.OnClickListener {
+
+        long[] currentSelection;
+
+        OnDeleteCardsDialogListener(long[] currentSelection) {
+            this.currentSelection = currentSelection;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    int selCount = currentSelection.length;
+                    for (long l : currentSelection) {
+                        getContentResolver().delete(LFRelationContract.CONTENT_URI,
+                                LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID + "=?", new String[]{ l + ""});
+                        getContentResolver().delete(FlashCardContract.CONTENT_URI,
+                                FlashCardContract.FlashCardEntry._ID + "=?", new String[]{l + ""});
+                    }
+                    Toast.makeText(DisplayCardsActivity.this, getResources().
+                            getQuantityString(R.plurals.deleted_card, selCount, selCount), Toast.LENGTH_SHORT).show();
+                    // set count for deleting multiple projects
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    // user cancelled
+                    break;
+            }
+        }
+    };
+
+
     private void setListActions() {
-        // TODO
+
+        mCardListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mCardListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.menu_card_context, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.action_edit_card:
+                        Toast.makeText(DisplayCardsActivity.this, "Edit selected cards", Toast.LENGTH_SHORT).show();
+                        mode.finish(); // Action picked, so close the CAB
+                        return true;
+                    case R.id.action_delete_card:
+                        deleteSelectedCards();
+                        mode.finish(); // Action picked, so close the CAB
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
     }
 }

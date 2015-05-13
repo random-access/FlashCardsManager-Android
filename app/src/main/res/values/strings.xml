@@ -15,7 +15,9 @@
     <string name="c_edit">Edit card</string>
     <string name="c_delete">Delete card</string>
     <string name="c_question">Question</string>
+    <string name="c_question_hint">Enter question text</string>
     <string name="c_answer">Answer</string>
+    <string name="c_answer_hint">Enter answer text</string>
     <string name="c_add_success">Card added successfully!</string>
     <string name="c_edit_success">Card edited successfully!</string>
 
