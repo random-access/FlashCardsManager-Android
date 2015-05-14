@@ -10,7 +10,6 @@ package org.random_access.flashcardsmanager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -24,8 +23,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
-import org.random_access.flashcardsmanager.queries.ProjectQuery;
+import org.random_access.flashcardsmanager.queries.ProjectQueries;
 
 public class ProjectDialogFragment extends DialogFragment {
 
@@ -63,7 +61,7 @@ public class ProjectDialogFragment extends DialogFragment {
         stacks = (EditText)dialogView.findViewById(R.id.p_add_stack);
         description = (EditText)dialogView.findViewById(R.id.p_add_description);
         if (!mIsNewProject) {
-            Cursor cursor = new ProjectQuery(getActivity()).getProjectWithId(mProjectId);
+            Cursor cursor = new ProjectQueries(getActivity()).getProjectWithId(mProjectId);
             cursor.moveToFirst();
             title.setText(cursor.getString(1));
             Log.d(TAG, "current title = " + cursor.getString(1));
@@ -126,10 +124,10 @@ public class ProjectDialogFragment extends DialogFragment {
                     stacks.setError(res.getString(R.string.error_invalid_stacks) + " (1 - 15)");
                 } else {
                     if (mIsNewProject) {
-                        new ProjectQuery(getActivity()).insertProject(pTitle, pDescription, noOfStacks);
+                        new ProjectQueries(getActivity()).insertProject(pTitle, pDescription, noOfStacks);
                         Toast.makeText(getActivity(), res.getString(R.string.p_add_success), Toast.LENGTH_SHORT).show();
                     } else {
-                        new ProjectQuery(getActivity()).updateProjectWithId(mProjectId, pTitle, pDescription, noOfStacks);
+                        new ProjectQueries(getActivity()).updateProjectWithId(mProjectId, pTitle, pDescription, noOfStacks);
                         Toast.makeText(getActivity(), res.getString(R.string.p_edit_success), Toast.LENGTH_SHORT).show();
                     }
                     dismiss();

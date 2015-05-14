@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.adapter.ProjectCursorAdapter;
 import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.queries.ProjectQueries;
 
 /**
  * Project: FlashCards Manager for Android
@@ -130,12 +131,10 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                 case DialogInterface.BUTTON_POSITIVE:
                     int selCount = currentSelection.length;
                     for (long l : currentSelection) {
-                        getContentResolver().delete(ProjectContract.CONTENT_URI,
-                                ProjectContract.ProjectEntry._ID + "=?", new String[]{l + ""});
+                        new ProjectQueries(DisplayProjectsActivity.this).deleteProjectWithId(l);
                     }
                     Toast.makeText(DisplayProjectsActivity.this, getResources().
                             getQuantityString(R.plurals.deleted_project, selCount, selCount), Toast.LENGTH_SHORT).show();
-                        // set count for deleting multiple projects
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
