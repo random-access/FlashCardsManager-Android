@@ -21,6 +21,7 @@ import org.random_access.flashcardsmanager.adapter.FlashCardCursorAdapter;
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.queries.FlashCardQueries;
 
 /**
  * Project: FlashCards Manager for Android
@@ -137,15 +138,12 @@ public class DisplayCardsActivity extends AppCompatActivity implements
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
                     int selCount = currentSelection.length;
+                    FlashCardQueries fQueries = new FlashCardQueries(DisplayCardsActivity.this);
                     for (long l : currentSelection) {
-                        getContentResolver().delete(LFRelationContract.CONTENT_URI,
-                                LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID + "=?", new String[]{ l + ""});
-                        getContentResolver().delete(FlashCardContract.CONTENT_URI,
-                                FlashCardContract.FlashCardEntry._ID + "=?", new String[]{l + ""});
+                        fQueries.deleteCardWithId(l);
                     }
                     Toast.makeText(DisplayCardsActivity.this, getResources().
                             getQuantityString(R.plurals.deleted_card, selCount, selCount), Toast.LENGTH_SHORT).show();
-                    // set count for deleting multiple projects
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:

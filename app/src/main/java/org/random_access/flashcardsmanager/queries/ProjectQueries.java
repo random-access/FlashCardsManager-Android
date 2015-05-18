@@ -45,6 +45,12 @@ public class ProjectQueries {
 
     public int updateProjectWithId(long projectId, String title, String description, int stacks) {
         ContentValues values = new ContentValues();
+        values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK, stacks);
+        int noOfChangedCards = context.getContentResolver().update(FlashCardContract.CONTENT_URI, values,
+                FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK  + "> ? and " + FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID + " = ?",
+                new String[]{stacks + "", projectId + ""});
+        Log.d(TAG, noOfChangedCards + " cards modified");
+        values = new ContentValues();
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_TITLE, title);
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION, description);
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, stacks);
@@ -60,7 +66,7 @@ public class ProjectQueries {
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION, description);
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, stacks);
         Uri insertUri = context.getContentResolver().insert(ProjectContract.CONTENT_URI, values);
-        Log.d(TAG, insertUri.toString());
+        Log.d(TAG, insertUri.getPath());
         return insertUri;
     }
 
@@ -83,7 +89,7 @@ public class ProjectQueries {
         deleteResult[1] = context.getContentResolver().delete(LabelContract.CONTENT_URI, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ?", project);
         deleteResult[0] = context.getContentResolver().delete(ProjectContract.CONTENT_URI,
                 ProjectContract.ProjectEntry._ID + " = ?", project);
-        Log.d(TAG, deleteResult.toString());
+        Log.d(TAG, deleteResult[0] + " projects, " + deleteResult[1] + " labels, " + deleteResult[2] + " flashcards, " + deleteResult[3] + " lfrels and " + deleteResult[4] +  " media deleted.");
         return deleteResult;
     }
 
