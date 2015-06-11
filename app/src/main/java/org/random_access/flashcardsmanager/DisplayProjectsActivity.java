@@ -34,6 +34,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
 
     private static final String TAG = DisplayProjectsActivity.class.getSimpleName();
     private static final String TAG_ADD_PROJECT = "add-project";
+    private static final String TAG_IMPORT_PROJECT = "import-project";
 
     public static final String TAG_PROJECT_ID = "project-id";
 
@@ -73,6 +74,9 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                 ProjectDialogFragment addProjectFragment = ProjectDialogFragment.newInstance(true, -1);
                 addProjectFragment.show(getFragmentManager(), TAG_ADD_PROJECT);
                 return true;
+            case R.id.action_import:
+                XMLImportDialog dialog = new XMLImportDialog();
+                dialog.show(getFragmentManager(), TAG_IMPORT_PROJECT);
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -60,4 +60,11 @@
         <item quantity="one">%d Karte gelöscht.</item> ,
         <item quantity="other">%d Karten gelöscht.</item>
     </plurals>
+    <string name="choose_session_constraints">Stapel und Labels wählen</string>
+    <string name="description">Beschreibung</string>
+    <string name="all">Alle</string>
+    <string name="labels">Labels</string>
+    <string name="selection">Auswahl</string>
+    <string name="title_activity_learning">LearningActivity</string>
+    <string name="title_activity_prepare_learning">PrepareLearningActivity</string>
 </resources>

@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import org.random_access.flashcardsmanager.helpers.Status;
+import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
 
 /**
  * Project: FlashCards Manager for Android
@@ -59,6 +61,51 @@ public class QueryHelper {
         }
         cursor.close();
         return status;
+    }
+
+    public static String[] buildFlashcardFilterArgumentString(long projectId, int[] stacks, String[] labels) {
+        String[] result = new String [labels.length + stacks.length + 1];
+        result[0] = Long.toString(projectId);
+        for (int i = 0; i < stacks.length; i++) {
+            result[1+i] = Integer.toString(stacks[i]);
+        }
+        for (int i = 0; i < labels.length; i++) {
+            result[1+stacks.length+i] = labels[i];
+        }
+        return  result;
+    }
+
+    public static String buildFlashcardFilterWhereString(int labelCount, int stacksCount) {
+        if (labelCount == 0 && stacksCount == 0) {
+            return FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID + " = ? ";
+        }
+        StringBuilder sb = new StringBuilder();
+
+        // add project constraint
+        sb.append(FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID).append(" = ? ").append(" AND ");
+
+        // add stacks constraints
+        if (stacksCount > 1) sb.append("(");
+        for (int i = 0; i < stacksCount; i++) {
+            sb.append(FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK).append(" = ?  OR ");
+        }
+        if (stacksCount > 0) sb.replace(sb.length() - 3, sb.length(), "");
+        if (stacksCount > 1) sb.append(")");
+
+        // add AND
+        if (labelCount > 0 && stacksCount > 0) {
+            sb.append(" OR ");
+        }
+
+        // add label constraints
+        if (labelCount > 1) sb.append("(");
+        for (int i = 0; i < labelCount; i++) {
+            sb.append(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID).append(" = ? OR ");
+        }
+        if (labelCount > 0)  sb.replace(sb.length() - 3, sb.length(), "");
+        if (labelCount > 1)  sb.append(")");
+
+        return sb.toString();
     }
 
 }

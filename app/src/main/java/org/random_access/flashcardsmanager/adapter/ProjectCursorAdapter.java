@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.DisplayLabelsActivity;
 import org.random_access.flashcardsmanager.DisplayProjectsActivity;
+import org.random_access.flashcardsmanager.PrepareLearningDialog;
 import org.random_access.flashcardsmanager.ProjectDialogFragment;
 import org.random_access.flashcardsmanager.R;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
@@ -35,6 +36,7 @@ public class ProjectCursorAdapter extends CursorAdapter{
 
     private static final String TAG = ProjectCursorAdapter.class.getSimpleName();
     private static final String TAG_EDIT_PROJECT = "edit-project";
+    private static final String TAG_PREPARE_LEARNING = "prepare-learning";
 
     public static final int COLLAPSED = 0;
     public static final int EXTENDED = 1;
@@ -136,8 +138,10 @@ public class ProjectCursorAdapter extends CursorAdapter{
             btnLearn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Learn function - not yet implemented..", Toast.LENGTH_SHORT).show();
-                    // TODO implement
+                    // Toast.makeText(context, "Learn function - not yet implemented..", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Open prepare learning dialog");
+                    PrepareLearningDialog d = PrepareLearningDialog.newInstance(projectId);
+                    d.show(getFragmentManager(context), TAG_PREPARE_LEARNING);
                 }
             });
 

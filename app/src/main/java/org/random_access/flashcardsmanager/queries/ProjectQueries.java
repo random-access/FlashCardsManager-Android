@@ -39,6 +39,16 @@ public class ProjectQueries {
                 FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID + " = ? ", new String[]{projectId + ""});
     }
 
+    public int getNumberOfStacks(long projectId) {
+        int numberOfStacks = 0;
+        Cursor c = getProjectWithId(projectId);
+        if (c.moveToFirst()) {
+            numberOfStacks = c.getInt(3);
+        }
+        c.close();
+        return numberOfStacks;
+    }
+
     public Cursor getProjectWithId(long projectId) {
         return context.getContentResolver().query(Uri.parse(ProjectContract.CONTENT_URI + "/" + projectId), projection, null, null, null);
     }

@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.random_access.flashcardsmanager" >
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,6 +33,14 @@
         <activity
             android:name=".DisplayCardsActivity"
             android:label="@string/title_activity_display_cards" >
+        </activity>
+        <activity
+            android:name=".LearningActivity"
+            android:label="@string/title_activity_learning" >
+        </activity>
+        <activity
+            android:name=".PrepareLearningDialog"
+            android:label="@string/title_activity_prepare_learning" >
         </activity>
     </application>
 

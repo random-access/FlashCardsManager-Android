@@ -28,8 +28,11 @@
     <string name="l_edit_success">Label edited successfully!</string>
 
     <string name="title">Title</string>
-    <string name="stacks">Stacks</string>
+    <string name="stacks">Stack</string>
     <string name="description">Description</string>
+    <string name="labels">Labels</string>
+
+    <string name="choose_session_constraints">Choose stacks and labels</string>
 
     <string name="learn">Learn</string>
 
@@ -38,6 +41,8 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="all">All</string>
+    <string name="selection">Selection</string>
 
     <string name="error_empty_field">Field can not be empty!</string>
     <string name="error_enter_number">Please enter a number!</string>
@@ -68,7 +73,14 @@
         <item quantity="other">%d cards deleted.</item>
     </plurals>
 
+    <plurals name="cards">
+        <item quantity="one">%d card</item>
+        <item quantity="other">%d cards</item>
+    </plurals>
+
     <string name="title_activity_display_labels">DisplayLabelsActivity</string>
     <string name="title_activity_display_cards">DisplayCardsActivity</string>
+    <string name="title_activity_learning">LearningActivity</string>
+    <string name="title_activity_prepare_learning">PrepareLearningActivity</string>
 
 </resources>
