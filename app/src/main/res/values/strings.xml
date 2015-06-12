@@ -48,6 +48,18 @@
     <string name="error_enter_number">Please enter a number!</string>
     <string name="error_invalid_stacks">Invalid number of stacks!</string>
 
+    <string name="statistics">Your Results</string>
+    <string name="right_answers">Right answers:</string>
+    <string name="wrong_answers">Wrong answers:</string>
+    <string name="not_answered">Not answered:</string>
+    <string name="close">Close</string>
+
+    <string name="save_results_title">Save results</string>
+    <string name="save_results">Do you want to save your results?</string>
+    <string name="save_results_success">Successfully saved results!</string>
+    <string name="answer_marked_right">Marked answer as right</string>
+    <string name="answer_marked_wrong">Marked answer as wrong</string>
+
     <plurals name="really_delete_project">
         <item quantity="one">Really delete %d project?</item> ,
         <item quantity="other">Really delete %d projects?</item>

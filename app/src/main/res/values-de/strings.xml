@@ -67,4 +67,14 @@
     <string name="selection">Auswahl</string>
     <string name="title_activity_learning">LearningActivity</string>
     <string name="title_activity_prepare_learning">PrepareLearningActivity</string>
+    <string name="close">Schließen</string>
+    <string name="not_answered">Nicht beantwortet:</string>
+    <string name="right_answers">Richtige Antworten:</string>
+    <string name="statistics">Deine Resultate:</string>
+    <string name="wrong_answers">Falsche Antworten:</string>
+    <string name="save_results">Möchtest du deine Ergebnisse speichern?</string>
+    <string name="save_results_success">Ergebnisse erfolgreich gespeichert!</string>
+    <string name="save_results_title">Ergebnisse speichern</string>
+    <string name="answer_marked_right">Antwort als richtig markiert</string>
+    <string name="answer_marked_wrong">Antwort als falsch markiert</string>
 </resources>

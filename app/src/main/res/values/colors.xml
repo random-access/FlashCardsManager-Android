@@ -2,12 +2,13 @@
 <resources>
 
     <item name="black" type="color">#000000</item>
-    <item name="green" type="color">#00FF00</item>
+    <item name="green" type="color">#00A000</item>
     <item name="yellow" type="color">#FFFF00</item>
-    <item name="red" type="color">#FF0000</item>
+    <item name="red" type="color">#D10000</item>
     <item name="grey" type="color">#77888888</item>
+    <item name="dark_grey" type="color">#0B0B0B</item>
     <item name="dark_blue" type="color">#220066</item>
-    <color name="light_blue" type="color">#880088</color>
+    <color name="light_blue" type="color">#3887D5</color>
 
     <item name="color_selected" type="color">#BBBBBB</item>
 </resources>

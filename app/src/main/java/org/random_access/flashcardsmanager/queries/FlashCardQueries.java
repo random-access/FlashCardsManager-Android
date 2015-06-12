@@ -52,4 +52,12 @@ public class FlashCardQueries {
                 FlashCardContract.FlashCardEntry._ID + "=?", new String[]{cardId + ""});
     }
 
+    public boolean updateStackOfCard(long cardId, int stack) {
+        ContentValues values = new ContentValues();
+        values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK, stack);
+        int noOfRowsModified = context.getContentResolver().update(FlashCardContract.CONTENT_URI, values,
+                FlashCardContract.FlashCardEntry._ID + "= ? ", new String[]{cardId + ""});
+        return noOfRowsModified > 0;
+    }
+
 }
