@@ -35,10 +35,8 @@ public class ProjectDialogFragment extends DialogFragment {
     private boolean mIsNewProject;
     private long mProjectId;
 
-    Resources res;
-    LayoutInflater inflater;
-    View dialogView;
-    EditText title, stacks, description;
+    private Resources res;
+    private EditText title, stacks, description;
 
     public static ProjectDialogFragment newInstance(boolean isNewProject, long projectId) {
         Bundle bundle = new Bundle();
@@ -54,8 +52,8 @@ public class ProjectDialogFragment extends DialogFragment {
         mIsNewProject = getArguments().getBoolean(TAG_IS_NEW_PROJECT);
         mProjectId = getArguments().getLong(TAG_PROJECT_ID);
         Log.d(TAG, "bundle project id = " + mProjectId);
-        inflater = getActivity().getLayoutInflater();
-        dialogView = inflater.inflate(R.layout.dialog_add_project, null);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_add_project, null);
         res = getResources();
         title = (EditText)dialogView.findViewById(R.id.p_add_title);
         stacks = (EditText)dialogView.findViewById(R.id.p_add_stack);

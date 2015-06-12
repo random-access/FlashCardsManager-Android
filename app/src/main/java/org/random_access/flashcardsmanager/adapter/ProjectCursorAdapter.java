@@ -38,8 +38,8 @@ public class ProjectCursorAdapter extends CursorAdapter{
     private static final String TAG_EDIT_PROJECT = "edit-project";
     private static final String TAG_PREPARE_LEARNING = "prepare-learning";
 
-    public static final int COLLAPSED = 0;
-    public static final int EXTENDED = 1;
+    private static final int COLLAPSED = 0;
+    private static final int EXTENDED = 1;
 
     private int mCurrentDetailPosition = -1;
 
@@ -175,7 +175,7 @@ public class ProjectCursorAdapter extends CursorAdapter{
         notifyDataSetChanged();
     }
 
-    public FragmentManager getFragmentManager(Context context) {
+    private FragmentManager getFragmentManager(Context context) {
         Activity activity = null;
         try{
             activity = (Activity) context;
@@ -222,6 +222,6 @@ public class ProjectCursorAdapter extends CursorAdapter{
                     break;
             }
         }
-    };
+    }
 
 }

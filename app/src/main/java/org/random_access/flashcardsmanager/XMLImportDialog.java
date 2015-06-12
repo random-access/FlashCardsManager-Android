@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,7 +17,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.xmlImport.FlashCardParser;
-import org.random_access.flashcardsmanager.xmlImport.ProjectParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -71,7 +69,7 @@ public class XMLImportDialog  extends DialogFragment {
         return builder.create();
     }
 
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();

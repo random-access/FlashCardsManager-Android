@@ -70,11 +70,11 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     private LearningFragment learningFragment;
 
     enum Direction {
-        PREVIOUS, NEXT;
+        PREVIOUS, NEXT
     }
 
     enum Result {
-        RIGHT, WRONG;
+        RIGHT, WRONG
     }
 
     @Override
@@ -271,7 +271,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void  showStatistics () {
-        int right = 0, wrong = 0, neutral = 0;
+        int right = 0, wrong = 0, neutral;
         for (Map.Entry<Long, Result> entry : statsTracking.entrySet()) {
             if (entry.getValue() != null) {
                 switch (entry.getValue()) {

@@ -1,13 +1,9 @@
 package org.random_access.flashcardsmanager.xmlImport;
 
-import android.util.Xml;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 /**
  * <b>Project:</b> FlashCards Manager for Android <br>
@@ -27,7 +23,7 @@ public class XMLParser {
 
 
     // Extracts XML text values
-    protected String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
             result = parser.getText();

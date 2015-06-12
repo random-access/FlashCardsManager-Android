@@ -7,7 +7,6 @@ import android.util.Log;
 
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
-import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
 
 /**
  * Project: FlashCards Manager for Android

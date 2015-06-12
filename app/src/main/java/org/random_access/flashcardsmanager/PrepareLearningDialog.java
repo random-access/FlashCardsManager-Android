@@ -162,7 +162,7 @@ public class PrepareLearningDialog extends DialogFragment {
 
     private void setupView() {
         ArrayList<String> labels = new LabelQueries(getActivity()).getLabelsFromProject(projectId);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, labels);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_checked, labels);
         lvLabels.setAdapter(adapter);
         lvLabels.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         for (int i = 0; i < labels.size(); i++){
@@ -172,7 +172,7 @@ public class PrepareLearningDialog extends DialogFragment {
         for (int i = 1; i <= new ProjectQueries(getActivity()).getNumberOfStacks(projectId); i++) {
             stacks.add(res.getString(R.string.stacks) + " " + i);
         }
-        ArrayAdapter<String> stackAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, stacks);
+        ArrayAdapter<String> stackAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_checked, stacks);
         lvStacks.setAdapter(stackAdapter);
         lvStacks.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         for (int i= 0; i < stacks.size(); i++) {
@@ -182,7 +182,7 @@ public class PrepareLearningDialog extends DialogFragment {
 
     private void displayNumberOfMatches() {
         // get current selection of labels
-        ArrayList<String> checkedLabels = new ArrayList<String>();
+        ArrayList<String> checkedLabels = new ArrayList<>();
         for (int i = 0; i < lvLabels.getAdapter().getCount(); i++) {
             if (lvLabels.isItemChecked(i)) {
                 checkedLabels.add((String)lvLabels.getAdapter().getItem(i));
@@ -191,7 +191,7 @@ public class PrepareLearningDialog extends DialogFragment {
         checkedLabelList = checkedLabels.toArray(new String[checkedLabels.size()]);
 
         // get current selection of items
-        ArrayList<Integer> checkedItems = new ArrayList<Integer>();
+        ArrayList<Integer> checkedItems = new ArrayList<>();
         for (int i = 1; i <= lvStacks.getAdapter().getCount(); i++) {
             if (lvStacks.isItemChecked(i-1) ) {
                 checkedItems.add(i);

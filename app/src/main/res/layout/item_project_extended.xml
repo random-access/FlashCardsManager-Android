@@ -10,7 +10,6 @@
         android:id="@+id/p_ext_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Projekt Test"
         android:textSize="10pt"
         android:textColor="@color/black"
         android:paddingTop="10dp"
@@ -30,7 +29,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/image_progress"
-        android:text="Hier eine Beschreibung die über mehrere Zeilen geht weil sie so lang ist."
         android:textSize="8pt"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"/>
@@ -40,7 +38,6 @@
         android:layout_below="@id/p_ext_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stacks: 3"
         android:textSize="8pt"
         android:paddingTop="10dp"
         android:paddingRight="15dp"
@@ -52,7 +49,7 @@
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cards: 47"
+
         android:textSize="8pt"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"/>

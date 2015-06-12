@@ -149,7 +149,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
                     break;
             }
         }
-    };
+    }
 
 
 

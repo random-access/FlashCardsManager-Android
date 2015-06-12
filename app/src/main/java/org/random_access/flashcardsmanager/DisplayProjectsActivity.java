@@ -146,7 +146,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                     break;
             }
         }
-    };
+    }
 
     private void setListActions () {
         mProjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

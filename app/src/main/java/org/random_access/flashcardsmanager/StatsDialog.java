@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -18,9 +17,9 @@ import android.widget.TextView;
  */
 public class StatsDialog extends DialogFragment {
 
-    public static final String KEY_RIGHT_CARDS = "key-right-cards";
-    public static final String KEY_WRONG_CARDS = "key-wrong-cards";
-    public static final String KEY_NEUTRAL_CARDS = "key-neutral-cards";
+    private static final String KEY_RIGHT_CARDS = "key-right-cards";
+    private static final String KEY_WRONG_CARDS = "key-wrong-cards";
+    private static final String KEY_NEUTRAL_CARDS = "key-neutral-cards";
 
     private int right, wrong, neutral;
 

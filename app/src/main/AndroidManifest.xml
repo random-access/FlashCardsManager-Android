@@ -38,10 +38,6 @@
             android:name=".LearningActivity"
             android:label="@string/title_activity_learning" >
         </activity>
-        <activity
-            android:name=".PrepareLearningDialog"
-            android:label="@string/title_activity_prepare_learning" >
-        </activity>
     </application>
 
 </manifest>

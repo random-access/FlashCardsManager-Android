@@ -33,11 +33,11 @@ public class AddCardFragment extends DialogFragment {
     private long mProjectId;
     private long mLabelId;
 
-    Resources res;
-    LayoutInflater inflater;
-    View dialogView;
-    EditText mQuestion;
-    EditText mAnswer;
+    private Resources res;
+    private LayoutInflater inflater;
+    private View dialogView;
+    private EditText mQuestion;
+    private EditText mAnswer;
 
     public static AddCardFragment newInstance(long projectId, long labelId) {
         Bundle bundle = new Bundle();

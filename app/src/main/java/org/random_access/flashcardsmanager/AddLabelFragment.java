@@ -29,10 +29,10 @@ public class AddLabelFragment extends DialogFragment {
 
     private long mProjectId;
 
-    Resources res;
-    LayoutInflater inflater;
-    View dialogView;
-    EditText title;
+    private Resources res;
+    private LayoutInflater inflater;
+    private View dialogView;
+    private EditText title;
 
     public static AddLabelFragment newInstance(long projectId) {
         Bundle bundle = new Bundle();

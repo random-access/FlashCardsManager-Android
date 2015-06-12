@@ -89,7 +89,7 @@ public class DisplayCardsActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         // Starts a new or restarts an existing Loader
-        getLoaderManager().restartLoader(0, null, this);;
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class DisplayCardsActivity extends AppCompatActivity implements
                     break;
             }
         }
-    };
+    }
 
 
     private void setListActions() {
