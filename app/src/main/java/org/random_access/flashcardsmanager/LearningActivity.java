@@ -295,6 +295,12 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         btnSwitch.setColorFilter(txtAnswer.getVisibility() == View.VISIBLE ? getResources().getColor(R.color.light_blue) : getResources().getColor(R.color.dark_grey));
     }
 
+    private void hideAnswer() {
+        txtAnswer.setVisibility(View.GONE);
+        lblAnswer.setVisibility(View.GONE);
+        btnSwitch.setColorFilter(getResources().getColor(R.color.dark_grey));
+    }
+
     private void navigate(Direction d) {
         if (d == Direction.PREVIOUS) {
             cardCursor.moveToPrevious();
@@ -303,6 +309,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         }
         cursorPosition = cardCursor.getPosition();
         manageNavigationButtonActivation();
+        hideAnswer();
         fillFields();
     }
 
