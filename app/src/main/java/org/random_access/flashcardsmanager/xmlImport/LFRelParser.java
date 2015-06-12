@@ -15,19 +15,19 @@ import java.util.ArrayList;
  * <b>Author:</b> Monika Schrenk <br>
  * <b>E-Mail:</b> software@random-access.org <br>
  */
-public class LabelParser  extends XMLParser{
-
-    // label property strings
-    private static final String ELEM_ROOT_ENTRY = "labels";
-    private static final String ELEM_BASE_ENTRY = "label";
+public class LFRelParser extends XMLParser {
+    // project property strings
+    // flashcard property strings
+    private static final String ELEM_ROOT_ENTRY= "labels_flashcards";
+    private static final String ELEM_BASE_ENTRY = "label_flashcard";
+    private static final String ELEM_LABELS_FLASHCARDS_ID = "labels_flashcards_id";
     private static final String ELEM_LABEL_ID = "label_id";
-    private static final String ELEM_PROJ_ID = "proj_id";
-    private static final String ELEM_LABEL_NAME = "label_name";
+    private static final String ELEM_CARD_ID = "card_id";
 
     // We don't use namespaces
     private static final String ns = null;
 
-    public ArrayList<Label> parse(InputStream in) throws XmlPullParserException, IOException {
+    public ArrayList<LFRel> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -39,8 +39,8 @@ public class LabelParser  extends XMLParser{
         }
     }
 
-    private ArrayList<Label> readXML(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ArrayList<Label> entries = new ArrayList<>();
+    private ArrayList<LFRel> readXML(XmlPullParser parser) throws XmlPullParserException, IOException {
+        ArrayList<LFRel> entries = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, ns, ELEM_ROOT_ENTRY);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -57,44 +57,44 @@ public class LabelParser  extends XMLParser{
         return entries;
     }
 
-    public static class Label {
+    public static class LFRel {
         public final int id;
-        public final int projId;
-        public final String name;
+        public final int labelId;
+        public final int cardId;
 
-        private Label(int id, int projId, String name) {
+        private LFRel(int id, int labelId, int cardId) {
             this.id = id;
-            this.projId = projId;
-            this.name = name;
+            this.labelId = labelId;
+            this.cardId = cardId;
         }
     }
 
     // Parses the contents of an entry
-    private Label readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private LFRel readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, ELEM_BASE_ENTRY);
         int id = 0;
-        int projId = 0;
-        String labelName = null;
+        int labelId = 0;
+        int cardId = 0;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             switch (name) {
+                case ELEM_LABELS_FLASHCARDS_ID:
+                    id = Integer.parseInt(readContent(parser, ns, ELEM_LABELS_FLASHCARDS_ID));
+                    break;
+                case ELEM_CARD_ID:
+                    cardId = Integer.parseInt(readContent(parser, ns, ELEM_CARD_ID));
+                    break;
                 case ELEM_LABEL_ID:
-                    id = Integer.parseInt(readContent(parser, ns, ELEM_LABEL_ID));
-                    break;
-                case ELEM_PROJ_ID:
-                    projId = Integer.parseInt(readContent(parser, ns, ELEM_PROJ_ID));
-                    break;
-                case ELEM_LABEL_NAME:
-                    labelName = readContent(parser, ns, ELEM_LABEL_NAME);
+                    labelId = Integer.parseInt(readContent(parser, ns, ELEM_LABEL_ID));
                     break;
                 default:
                     skip(parser);
             }
         }
-        return new Label(id, projId, labelName);
+        return new LFRel(id, labelId, cardId);
     }
 
 }

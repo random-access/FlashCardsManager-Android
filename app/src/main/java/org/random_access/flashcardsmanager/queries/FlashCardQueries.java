@@ -2,11 +2,14 @@ package org.random_access.flashcardsmanager.queries;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.xmlImport.LFRelParser;
 
 /**
  * Project: FlashCards Manager for Android
@@ -24,7 +27,7 @@ public class FlashCardQueries {
         this.context = context;
     }
 
-    public Uri insertCard(String question, String answer, int stack, int projectId) {
+    public Uri insertCard(String question, String answer, int stack, long projectId) {
         ContentValues values = new ContentValues();
         values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION, question);
         values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER, answer);
@@ -35,7 +38,7 @@ public class FlashCardQueries {
         return insertUri;
     }
 
-    public Uri assignLabelToCard(int cardId, int labelId) {
+    public Uri assignLabelToCard(long cardId, long labelId) {
         ContentValues values = new ContentValues();
         values.put(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID, cardId);
         values.put(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID, labelId);

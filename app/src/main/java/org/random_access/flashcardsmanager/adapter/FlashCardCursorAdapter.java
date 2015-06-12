@@ -2,6 +2,7 @@ package org.random_access.flashcardsmanager.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class FlashCardCursorAdapter extends CursorAdapter {
 
         // bind view to data
         setStatusDrawable(0, imgStatus);
-        txtQuestion.setText(cardTitle);
+        txtQuestion.setText(Html.fromHtml(cardTitle));
     }
 
     private void setStatusDrawable(int status, ImageView view) {

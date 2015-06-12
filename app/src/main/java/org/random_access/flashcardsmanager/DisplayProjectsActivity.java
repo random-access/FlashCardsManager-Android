@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -75,8 +76,8 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                 addProjectFragment.show(getFragmentManager(), TAG_ADD_PROJECT);
                 return true;
             case R.id.action_import:
-                XMLImportDialog dialog = new XMLImportDialog();
-                dialog.show(getFragmentManager(), TAG_IMPORT_PROJECT);
+                Intent intent = new Intent(this, XMLImportActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -28,19 +28,19 @@ public class ProjectParser extends XMLParser{
     // We don't use namespaces
     private static final String ns = null;
 
-    public ArrayList parse(InputStream in) throws XmlPullParserException, IOException {
+    public ArrayList<Project> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            return readFeed(parser);
+            return readXML(parser);
         } finally {
             in.close();
         }
     }
 
-    private ArrayList readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ArrayList<Project> readXML(XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<Project> entries = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, ns, ELEM_ROOT_ENTRY);
@@ -49,7 +49,6 @@ public class ProjectParser extends XMLParser{
                 continue;
             }
             String name = parser.getName();
-            // Starts by looking for the project tag
             if (name.equals(ELEM_BASE_ENTRY)) {
                 entries.add(readEntry(parser));
             } else {

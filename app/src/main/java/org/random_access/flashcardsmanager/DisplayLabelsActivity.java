@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.adapter.LabelCursorAdapter;
 import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
+import org.random_access.flashcardsmanager.queries.LabelQueries;
 
 /**
  * Project: FlashCards Manager for Android
@@ -96,7 +97,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
         String[] L_LIST_PROJECTION = { LabelContract.LabelEntry._ID,
                 LabelContract.LabelEntry.COLUMN_NAME_TITLE};
         return new CursorLoader(this, LabelContract.CONTENT_URI, L_LIST_PROJECTION,
-                LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + "=?", new String[] {mCurrentProject + ""}, null);
+                LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ? ", new String[] {mCurrentProject + ""}, null);
     }
 
     @Override
@@ -132,16 +133,21 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
+            boolean success = true;
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
                     int selCount = currentSelection.length;
                     for (long l : currentSelection) {
-                        getContentResolver().delete(LabelContract.CONTENT_URI,
-                                LabelContract.LabelEntry._ID + "=?", new String[]{l + ""});
+                        success &= new LabelQueries(DisplayLabelsActivity.this).deleteLabel(l, mCurrentProject);
                     }
-                    Toast.makeText(DisplayLabelsActivity.this, getResources().
-                            getQuantityString(R.plurals.deleted_label, selCount, selCount), Toast.LENGTH_SHORT).show();
-                    // set count for deleting multiple projects
+                    if (success) {
+                        Toast.makeText(DisplayLabelsActivity.this, getResources().
+                                getQuantityString(R.plurals.deleted_label, selCount, selCount), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(DisplayLabelsActivity.this, getResources().
+                                getQuantityString(R.plurals.deleted_label, selCount-1, selCount-1)
+                                + "\n" + getResources().getString(R.string.uncategorized) + " " + getResources().getString(R.string.cant_delete), Toast.LENGTH_SHORT).show();
+                    }
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:

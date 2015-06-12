@@ -22,6 +22,7 @@ public class FlashCardParser extends XMLParser {
     private static final String ELEM_BASE_ENTRY = "flashcard";
 
     private static final String ELEM_CARD_ID = "card_id";
+    private static final String ELEM_PROJ_ID = "proj_id";
     private static final String ELEM_STACK = "stack";
     private static final String ELEM_QUESTION = "question";
     private static final String ELEM_ANSWER = "answer";
@@ -29,7 +30,7 @@ public class FlashCardParser extends XMLParser {
     // We don't use namespaces
     private static final String ns = null;
 
-    public ArrayList parse(InputStream in) throws XmlPullParserException, IOException {
+    public ArrayList<FlashCard> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -41,7 +42,7 @@ public class FlashCardParser extends XMLParser {
         }
     }
 
-    private ArrayList readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ArrayList<FlashCard> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<FlashCard> entries = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, ns, ELEM_ROOT_ENTRY);
@@ -50,9 +51,8 @@ public class FlashCardParser extends XMLParser {
                 continue;
             }
             String name = parser.getName();
-            // Starts by looking for the project tag
             if (name.equals(ELEM_BASE_ENTRY)) {
-                entries.add(readEntry(parser));
+                entries.add(readXML(parser));
             } else {
                 skip(parser);
             }
@@ -62,12 +62,14 @@ public class FlashCardParser extends XMLParser {
 
     public static class FlashCard {
         public final int id;
+        public final int projId;
         public final int stack;
         public final String question;
         public final String answer;
 
-        private FlashCard(int id, int stack, String question, String answer) {
+        private FlashCard(int id, int projId, int stack, String question, String answer) {
             this.id = id;
+            this.projId = projId;
             this.stack = stack;
             this.question = question;
             this.answer = answer;
@@ -75,9 +77,10 @@ public class FlashCardParser extends XMLParser {
     }
 
     // Parses the contents of an entry
-    private FlashCard readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private FlashCard readXML(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, ELEM_BASE_ENTRY);
         int id = 0;
+        int projId = 0;
         int stack = 0;
         String question = null;
         String answer = null;
@@ -89,6 +92,9 @@ public class FlashCardParser extends XMLParser {
             switch (name) {
                 case ELEM_CARD_ID:
                     id = Integer.parseInt(readContent(parser, ns, ELEM_CARD_ID));
+                    break;
+                case ELEM_PROJ_ID:
+                    projId = Integer.parseInt(readContent(parser, ns, ELEM_PROJ_ID));
                     break;
                 case ELEM_STACK:
                     stack = Integer.parseInt(readContent(parser, ns, ELEM_STACK));
@@ -103,7 +109,7 @@ public class FlashCardParser extends XMLParser {
                     skip(parser);
             }
         }
-        return new FlashCard(id, stack, question, answer);
+        return new FlashCard(id, projId, stack, question, answer);
     }
 
 }

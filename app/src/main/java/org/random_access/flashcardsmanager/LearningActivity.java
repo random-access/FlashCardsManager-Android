@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -250,15 +251,15 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         statsTracking.put(currentId, result);
         switch (result) {
             case RIGHT:
+                msg = getResources().getString(R.string.answer_marked_right);
                 if (currentStack < new ProjectQueries(this).getNumberOfStacks(projectId)) {
                     progressChanges.put(currentId, ++currentStack);
-                    msg = getResources().getString(R.string.answer_marked_right);
                 }
                 break;
             case WRONG:
+                msg = getResources().getString(R.string.answer_marked_wrong);
                 if (currentStack > 1) {
                     progressChanges.put(currentId, --currentStack);
-                    msg = getResources().getString(R.string.answer_marked_wrong);
                 }
                 break;
         }
@@ -322,8 +323,8 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
     private void fillFields() {
         setTitle((cardCursor.getPosition()+1) + " / " + cardCursor.getCount());
-        txtQuestion.setText(cardCursor.getString(COL_QUESTION));
-        txtAnswer.setText(cardCursor.getString(COL_ANSWER));
+        txtQuestion.setText(Html.fromHtml(cardCursor.getString(COL_QUESTION)));
+        txtAnswer.setText(Html.fromHtml(cardCursor.getString(COL_ANSWER)));
     }
 
 
