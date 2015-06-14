@@ -16,8 +16,8 @@ import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 public class LabelContract {
 
     private static final String TAG = LabelContract.class.getSimpleName();
-
-    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + LabelContract.LabelEntry.TABLE_NAME);
+    public static final String TABLE_NAME = "_TBL_LABELS";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + TABLE_NAME);
 
     // prevent instantiation
     private LabelContract() {}
@@ -34,8 +34,6 @@ public class LabelContract {
      */
     public static abstract class LabelEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "_TBL_LABELS";
-
         public static final String COLUMN_NAME_TITLE = "_TITLE";
         public static final String COLUMN_NAME_FK_P_ID = "_FK_P_ID";
 
@@ -45,18 +43,18 @@ public class LabelContract {
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
-            + LabelEntry.TABLE_NAME
+            + TABLE_NAME
             + "("
             + LabelEntry._ID + " integer primary key autoincrement, "
             + LabelEntry.COLUMN_NAME_TITLE + " text not null, "
             + LabelEntry.COLUMN_NAME_FK_P_ID + " integer, "
             + "foreign key (" + LabelEntry.COLUMN_NAME_FK_P_ID + ") references "
-            +  ProjectContract.ProjectEntry.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
+            +  ProjectContract.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
             + ");";
 
     public static void onCreate (SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-        Log.d(TAG, DATABASE_CREATE);
+        Log.i(TAG, DATABASE_CREATE);
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {

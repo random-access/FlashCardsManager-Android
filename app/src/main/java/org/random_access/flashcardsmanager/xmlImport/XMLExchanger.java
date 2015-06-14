@@ -1,11 +1,11 @@
 package org.random_access.flashcardsmanager.xmlImport;
 
 import android.content.Context;
-import android.text.Html;
 
 import org.random_access.flashcardsmanager.R;
 import org.random_access.flashcardsmanager.queries.FlashCardQueries;
 import org.random_access.flashcardsmanager.queries.LabelQueries;
+import org.random_access.flashcardsmanager.queries.MediaQueries;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.net.Uri;
 import android.util.Log;
 
 /**
@@ -34,22 +33,26 @@ public class XMLExchanger {
     private static final String FILE_PROJECTS = "projects.xml";
     private static final String FILE_LABELS = "labels.xml";
     private static final String FILE_LFRELS = "labels-flashcards-rel.xml";
+    private static final String FILE_MEDIA = "media.xml";
 
     private Context context;
-    private final String DIRECTORY;
+    private final String IMPORT_DIRECTORY;
+    private final String IMPORT_DIRECTORY_MEDIA;
 
     private ArrayList<FlashCardParser.FlashCard> flashCards;
     private ArrayList<ProjectParser.Project> projects;
     private ArrayList<LabelParser.Label> labels;
     private ArrayList<LFRelParser.LFRel> lfRels;
+    private ArrayList<MediaParser.Media> media;
 
-    Map<Integer, Integer> labelIdConversionMap = new HashMap<>();
+    Map<Long, Long> labelIdConversionMap = new HashMap<>();
     private long uncategorizedLabelId;
     private boolean usedUncategorizedLabel;
 
     public XMLExchanger(Context context, String directory) {
         this.context = context;
-        this.DIRECTORY = directory;
+        this.IMPORT_DIRECTORY = context.getFilesDir().getAbsolutePath() + "/" + directory;
+        this.IMPORT_DIRECTORY_MEDIA = IMPORT_DIRECTORY + "/" + "media";
     }
 
     public void importProjects() throws XmlPullParserException, IOException {
@@ -57,18 +60,18 @@ public class XMLExchanger {
         parseFlashcardsFromXML();
         parseLabelFromXML();
         parseLFRelFromXML();
+        parseMediaFromXML();
         Log.d(TAG, "Parsing complete!");
         saveToDatabase();
     }
 
-    private void saveToDatabase() {
+    private void saveToDatabase() throws IOException{
         ProjectQueries queries = new ProjectQueries(context);
-        FlashCardQueries flashCardQueries = new FlashCardQueries(context);
         for (ProjectParser.Project p : projects) {
-            int pId = Integer.parseInt(queries.insertProject(p.title, "", p.noOfStacks).getLastPathSegment());
+            long pId = Long.parseLong(queries.insertProject(p.title, "", p.noOfStacks).getLastPathSegment());
             uncategorizedLabelId = Long.parseLong(new LabelQueries(context).addLabel(pId, context.getResources().getString(R.string.uncategorized)).getLastPathSegment());
-            convertLabels(p.id, pId);
-            convertFlashcards(p.id, pId);
+            importLabels(p.id, pId);
+            importFlashcards(p.id, pId);
             if (!usedUncategorizedLabel) {
                 // delete uncategorized label if not needed
                 LabelQueries labelQueries = new LabelQueries(context);
@@ -80,27 +83,28 @@ public class XMLExchanger {
         }
     }
 
-    private void convertLabels(int xmlPid, int pId) {
+    private void importLabels(long xmlPid, long pId) {
         LabelQueries labelQueries = new LabelQueries(context);
         for (LabelParser.Label l : labels) {
             if (l.projId == xmlPid){
-                int lId = Integer.parseInt(labelQueries.addLabel(pId, l.name).getLastPathSegment());
+                long lId = Long.parseLong(labelQueries.addLabel(pId, l.name).getLastPathSegment());
                 labelIdConversionMap.put(l.id,lId);
             }
         }
     }
 
-    private void convertFlashcards(int xmlPid, int pId) {
+    private void importFlashcards(long xmlPid, long pId) throws IOException {
         FlashCardQueries flashCardQueries = new FlashCardQueries(context);
         for (FlashCardParser.FlashCard f : flashCards) {
             if (f.projId == xmlPid) {
-                int fId = Integer.parseInt(flashCardQueries.insertCard(f.question, f.answer, f.stack, pId).getLastPathSegment());
-                convertLfRels(f.id, pId, fId);
+                long fId = Long.parseLong(flashCardQueries.insertCard(f.question, f.answer, f.stack, pId).getLastPathSegment());
+                importLfRels(f.id, pId, fId);
+                importMedia(f.id, pId, fId);
             }
         }
     }
 
-    private void convertLfRels(int xmlFId, int pId, int fId) {
+    private void importLfRels(long xmlFId, long pId, long fId) {
         FlashCardQueries flashCardQueries = new FlashCardQueries(context);
         boolean hasLabel = false;
         for (LFRelParser.LFRel lfRel : lfRels) {
@@ -115,12 +119,21 @@ public class XMLExchanger {
         }
     }
 
+    private void importMedia(long xmlFId, long pId, long fId) throws IOException{
+        MediaQueries mediaQueries = new MediaQueries(context);
+        for (MediaParser.Media m : media) {
+            if (xmlFId == m.id) {
+                mediaQueries.insertMedia(pId, fId, m.picType, IMPORT_DIRECTORY_MEDIA + "/" + m.pathToMedia);
+            }
+        }
+    }
+
 
     private void parseProjectsFromXML() throws XmlPullParserException, IOException {
         ProjectParser projectParser = new ProjectParser();
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(context.getFilesDir().getAbsolutePath() + "/" + DIRECTORY, FILE_PROJECTS));
+            inputStream = new FileInputStream(new File(IMPORT_DIRECTORY, FILE_PROJECTS));
             projects = projectParser.parse(inputStream);
         } finally {
             if (inputStream != null) {
@@ -133,7 +146,7 @@ public class XMLExchanger {
         FlashCardParser flashCardParser = new FlashCardParser();
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(context.getFilesDir().getAbsolutePath() + "/" + DIRECTORY, FILE_FLASHCARDS));
+            inputStream = new FileInputStream(new File(IMPORT_DIRECTORY, FILE_FLASHCARDS));
             flashCards = flashCardParser.parse(inputStream);
         } finally {
             if (inputStream != null) {
@@ -146,7 +159,7 @@ public class XMLExchanger {
         LabelParser labelParser = new LabelParser();
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(context.getFilesDir().getAbsolutePath() + "/" + DIRECTORY, FILE_LABELS));
+            inputStream = new FileInputStream(new File(IMPORT_DIRECTORY, FILE_LABELS));
             labels = labelParser.parse(inputStream);
         } finally {
             if (inputStream != null) {
@@ -159,8 +172,21 @@ public class XMLExchanger {
         LFRelParser lfRelParser = new LFRelParser();
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(context.getFilesDir().getAbsolutePath() + "/" + DIRECTORY, FILE_LFRELS));
+            inputStream = new FileInputStream(new File(IMPORT_DIRECTORY, FILE_LFRELS));
             lfRels = lfRelParser.parse(inputStream);
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+    }
+
+    private void parseMediaFromXML() throws XmlPullParserException, IOException  {
+        MediaParser mediaParser = new MediaParser();
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(new File(IMPORT_DIRECTORY, FILE_MEDIA));
+            media = mediaParser.parse(inputStream);
         } finally {
             if (inputStream != null) {
                 inputStream.close();

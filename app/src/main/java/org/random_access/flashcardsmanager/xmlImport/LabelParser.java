@@ -58,11 +58,11 @@ public class LabelParser  extends XMLParser{
     }
 
     public static class Label {
-        public final int id;
-        public final int projId;
+        public final long id;
+        public final long projId;
         public final String name;
 
-        private Label(int id, int projId, String name) {
+        private Label(long id, long projId, String name) {
             this.id = id;
             this.projId = projId;
             this.name = name;
@@ -72,8 +72,8 @@ public class LabelParser  extends XMLParser{
     // Parses the contents of an entry
     private Label readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, ELEM_BASE_ENTRY);
-        int id = 0;
-        int projId = 0;
+        long id = 0;
+        long projId = 0;
         String labelName = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -82,10 +82,10 @@ public class LabelParser  extends XMLParser{
             String name = parser.getName();
             switch (name) {
                 case ELEM_LABEL_ID:
-                    id = Integer.parseInt(readContent(parser, ns, ELEM_LABEL_ID));
+                    id = Long.parseLong(readContent(parser, ns, ELEM_LABEL_ID));
                     break;
                 case ELEM_PROJ_ID:
-                    projId = Integer.parseInt(readContent(parser, ns, ELEM_PROJ_ID));
+                    projId = Long.parseLong(readContent(parser, ns, ELEM_PROJ_ID));
                     break;
                 case ELEM_LABEL_NAME:
                     labelName = readContent(parser, ns, ELEM_LABEL_NAME);

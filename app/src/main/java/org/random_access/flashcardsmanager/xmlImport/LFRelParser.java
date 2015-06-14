@@ -58,11 +58,11 @@ public class LFRelParser extends XMLParser {
     }
 
     public static class LFRel {
-        public final int id;
-        public final int labelId;
-        public final int cardId;
+        public final long id;
+        public final long labelId;
+        public final long cardId;
 
-        private LFRel(int id, int labelId, int cardId) {
+        private LFRel(long id, long labelId, long cardId) {
             this.id = id;
             this.labelId = labelId;
             this.cardId = cardId;
@@ -72,9 +72,9 @@ public class LFRelParser extends XMLParser {
     // Parses the contents of an entry
     private LFRel readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, ELEM_BASE_ENTRY);
-        int id = 0;
-        int labelId = 0;
-        int cardId = 0;
+        long id = 0;
+        long labelId = 0;
+        long cardId = 0;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;

@@ -6,12 +6,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import org.random_access.flashcardsmanager.MediaExchanger;
 import org.random_access.flashcardsmanager.helpers.Status;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
 import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
 import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
 import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.StatsContract;
 
 /**
  * Project: FlashCards Manager for Android
@@ -76,12 +78,14 @@ public class ProjectQueries {
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION, description);
         values.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, stacks);
         Uri insertUri = context.getContentResolver().insert(ProjectContract.CONTENT_URI, values);
+        long projectId = Long.parseLong(insertUri.getLastPathSegment());
         Log.d(TAG, insertUri.getPath());
+        MediaExchanger.createProjectDirectory(context, projectId);
         return insertUri;
     }
 
     public int[] deleteProjectWithId (long projectId) {
-        int[] deleteResult = new int[5];
+        int[] deleteResult = new int[6];
         String[] FLASHCARDS_ID_PROJECTION = {FlashCardContract.FlashCardEntry._ID};
         Cursor cursor = context.getContentResolver().query(FlashCardContract.CONTENT_URI, FLASHCARDS_ID_PROJECTION, FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID + " = ?",
                 new String[]{projectId + ""},null);
@@ -95,8 +99,11 @@ public class ProjectQueries {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         String[] project = {projectId + ""};
-        deleteResult[1] = context.getContentResolver().delete(LabelContract.CONTENT_URI, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ?", project);
+        MediaExchanger.deleteProjectDirectory(context, projectId);
+        deleteResult[5] = context.getContentResolver().delete(StatsContract.CONTENT_URI, StatsContract.StatsEntry.COLUMN_NAME_FK_P_ID + " = ? ", project);
+        deleteResult[1] = context.getContentResolver().delete(LabelContract.CONTENT_URI, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + "  = ? ", project);
         deleteResult[0] = context.getContentResolver().delete(ProjectContract.CONTENT_URI,
                 ProjectContract.ProjectEntry._ID + " = ?", project);
         Log.d(TAG, deleteResult[0] + " projects, " + deleteResult[1] + " labels, " + deleteResult[2] + " flashcards, " + deleteResult[3] + " lfrels and " + deleteResult[4] +  " media deleted.");

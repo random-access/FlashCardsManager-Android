@@ -9,6 +9,7 @@ import android.util.Log;
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
 import org.random_access.flashcardsmanager.xmlImport.LFRelParser;
 
 /**
@@ -47,7 +48,8 @@ public class FlashCardQueries {
         return insertUri;
     }
 
-    public void deleteCardWithId(long cardId){
+    public void deleteCardWithId(long projectId, long cardId){
+        new MediaQueries(context).deleteMedia(projectId, cardId);
         context.getContentResolver().delete(LFRelationContract.CONTENT_URI,
                 LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID + "=?", new String[]{cardId + ""});
         context.getContentResolver().delete(FlashCardContract.CONTENT_URI,

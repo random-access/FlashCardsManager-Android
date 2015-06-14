@@ -108,7 +108,8 @@ public class PrepareLearningDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         displayNumberOfMatches();
-        rgSearchCriteria.check(R.id.choice_or);
+        if (rgSearchCriteria.getCheckedRadioButtonId() == -1)
+            rgSearchCriteria.check(R.id.choice_or);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
         }

@@ -138,7 +138,7 @@ public class DisplayCardsActivity extends AppCompatActivity implements
                     int selCount = currentSelection.length;
                     FlashCardQueries fQueries = new FlashCardQueries(DisplayCardsActivity.this);
                     for (long l : currentSelection) {
-                        fQueries.deleteCardWithId(l);
+                        fQueries.deleteCardWithId(mCurrentProject, l);
                     }
                     Toast.makeText(DisplayCardsActivity.this, getResources().
                             getQuantityString(R.plurals.deleted_card, selCount, selCount), Toast.LENGTH_SHORT).show();

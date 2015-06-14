@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.random_access.flashcardsmanager.helpers.MyFileUtils;
 import org.random_access.flashcardsmanager.xmlImport.FlashCardParser;
 import org.random_access.flashcardsmanager.xmlImport.UnzipHelper;
 import org.random_access.flashcardsmanager.xmlImport.XMLExchanger;
@@ -52,29 +53,8 @@ public class XMLImportActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_xml);
-        txtUrl = (EditText) findViewById(R.id.download_url);
-        btnStartDownload = (Button) findViewById(R.id.btn_start_download);
-        tvShowDownload = (TextView) findViewById(R.id.tv_show_download);
-        progressBar = (ProgressBar) findViewById(R.id.progress_wheel);
-
-        btnStartDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String downloadUrl = txtUrl.getText().toString();
-                if (isOnline() && !TextUtils.isEmpty(downloadUrl)) {
-                    tvShowDownload.setVisibility(View.GONE);
-                    new DownloadXmlTask().execute(downloadUrl);
-                } else {
-                    tvShowDownload.setVisibility(View.VISIBLE);
-                    if (!isOnline()) {
-                        tvShowDownload.setText(getResources().getString(R.string.network_error));
-                    } else {
-                        tvShowDownload.setText(R.string.download_url_missing);
-                    }
-                }
-            }
-        });
-
+        getViewElems();
+        setListeners();
     }
 
     @Override
@@ -99,6 +79,33 @@ public class XMLImportActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void getViewElems() {
+        txtUrl = (EditText) findViewById(R.id.download_url);
+        btnStartDownload = (Button) findViewById(R.id.btn_start_download);
+        tvShowDownload = (TextView) findViewById(R.id.tv_show_download);
+        progressBar = (ProgressBar) findViewById(R.id.progress_wheel);
+    }
+
+    private void setListeners() {
+        btnStartDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String downloadUrl = txtUrl.getText().toString();
+                if (isOnline() && !TextUtils.isEmpty(downloadUrl)) {
+                    tvShowDownload.setVisibility(View.GONE);
+                    new DownloadXmlTask().execute(downloadUrl);
+                } else {
+                    tvShowDownload.setVisibility(View.VISIBLE);
+                    if (!isOnline()) {
+                        tvShowDownload.setText(getResources().getString(R.string.network_error));
+                    } else {
+                        tvShowDownload.setText(R.string.download_url_missing);
+                    }
+                }
+            }
+        });
+    }
+
     private boolean isOnline() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -121,11 +128,13 @@ public class XMLImportActivity extends AppCompatActivity {
                 loadXmlFromNetwork(urls[0]);
                 XMLExchanger xmlExchanger = new XMLExchanger(XMLImportActivity.this, IMPORT_DIR);
                 xmlExchanger.importProjects();
-                deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
+                MyFileUtils.deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
                 return getResources().getString(R.string.finished);
             } catch (IOException e) {
+                e.printStackTrace();
                 return getResources().getString(R.string.connection_error);
             } catch (XmlPullParserException e) {
+                e.printStackTrace();
                 return getResources().getString(R.string.xml_error);
             }
         }
@@ -139,41 +148,29 @@ public class XMLImportActivity extends AppCompatActivity {
     }
 
     private void loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
-        InputStream stream = null;
+        HttpURLConnection conn = null;
         try {
-            stream = downloadUrl(urlString);
+            conn = downloadUrl(urlString);
+            InputStream stream = conn.getInputStream();
             UnzipHelper.unzip(stream, getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR, XMLImportActivity.this);
         } finally {
-            if (stream != null) {
-                stream.close();
+            if (conn != null) {
+                conn.disconnect();
             }
         }
-    }
-
-    private boolean deleteRecursive(File path) {
-        boolean success = true;
-        if (path.isDirectory()) {
-            for (File f : path.listFiles()) {
-                success &= deleteRecursive(f);
-            }
-        }  else {
-            success &= path.delete();
-        }
-        return success;
     }
 
     // Given a string representation of a URL, sets up a connection and gets
     // an input stream.
-    private InputStream downloadUrl(String urlString) throws IOException {
+    private HttpURLConnection downloadUrl(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(10000 /* milliseconds */);
         conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
-        // Starts the query
         conn.connect();
-        return conn.getInputStream();
+        return conn;
     }
 
 

@@ -11,26 +11,26 @@ import java.util.ArrayList;
 
 /**
  * <b>Project:</b> FlashCards Manager for Android <br>
- * <b>Date:</b> 12.06.15 <br>
+ * <b>Date:</b> 14.06.15 <br>
  * <b>Author:</b> Monika Schrenk <br>
  * <b>E-Mail:</b> software@random-access.org <br>
  */
-public class FlashCardParser extends XMLParser {
+public class MediaParser extends XMLParser{
 
     // flashcard property strings
-    private static final String ELEM_ROOT_ENTRY= "flashcards";
-    private static final String ELEM_BASE_ENTRY = "flashcard";
+    private static final String ELEM_ROOT_ENTRY= "medias";
+    private static final String ELEM_BASE_ENTRY = "media";
 
+    // media property strings
+    private static final String ELEM_MEDIA_ID = "media_id";
     private static final String ELEM_CARD_ID = "card_id";
-    private static final String ELEM_PROJ_ID = "proj_id";
-    private static final String ELEM_STACK = "stack";
-    private static final String ELEM_QUESTION = "question";
-    private static final String ELEM_ANSWER = "answer";
+    private static final String ELEM_PATH_TO_MEDIA = "path_to_media";
+    private static final String ELEM_PICTYPE = "pictype";
 
     // We don't use namespaces
     private static final String ns = null;
 
-    public ArrayList<FlashCard> parse(InputStream in) throws XmlPullParserException, IOException {
+    public ArrayList<Media> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -42,8 +42,8 @@ public class FlashCardParser extends XMLParser {
         }
     }
 
-    private ArrayList<FlashCard> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ArrayList<FlashCard> entries = new ArrayList<>();
+    private ArrayList<Media> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        ArrayList<Media> entries = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, ns, ELEM_ROOT_ENTRY);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -60,56 +60,52 @@ public class FlashCardParser extends XMLParser {
         return entries;
     }
 
-    public static class FlashCard {
+    public static class Media {
         public final long id;
-        public final long projId;
-        public final int stack;
-        public final String question;
-        public final String answer;
+        public final long cardId;
+        public final String pathToMedia;
+        public final String picType;
 
-        private FlashCard(long id, long projId, int stack, String question, String answer) {
+        private Media(long id, long cardId, String pathToMedia, String picType) {
             this.id = id;
-            this.projId = projId;
-            this.stack = stack;
-            this.question = question;
-            this.answer = answer;
+            this.cardId = cardId;
+            this.pathToMedia = pathToMedia;
+            this.picType = picType;
         }
     }
 
     // Parses the contents of an entry
-    private FlashCard readXML(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Media readXML(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, ELEM_BASE_ENTRY);
         long id = 0;
-        long projId = 0;
-        int stack = 0;
-        String question = null;
-        String answer = null;
+        long cardId = 0;
+        String pathToMedia = null;
+        String picType = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             switch (name) {
+                case ELEM_MEDIA_ID:
+                    id = Integer.parseInt(readContent(parser, ns, ELEM_MEDIA_ID));
+                    break;
                 case ELEM_CARD_ID:
                     id = Integer.parseInt(readContent(parser, ns, ELEM_CARD_ID));
                     break;
-                case ELEM_PROJ_ID:
-                    projId = Integer.parseInt(readContent(parser, ns, ELEM_PROJ_ID));
+                case ELEM_PATH_TO_MEDIA:
+                    pathToMedia = readContent(parser, ns, ELEM_PATH_TO_MEDIA);
                     break;
-                case ELEM_STACK:
-                    stack = Integer.parseInt(readContent(parser, ns, ELEM_STACK));
-                    break;
-                case ELEM_QUESTION:
-                    question = readContent(parser, ns, ELEM_QUESTION);
-                    break;
-                case ELEM_ANSWER:
-                    answer = readContent(parser, ns, ELEM_ANSWER);
+                case ELEM_PICTYPE:
+                    picType = readContent(parser, ns, ELEM_PICTYPE);
+                    // todo check if "q" or "a" otherwise damaged xml file!
                     break;
                 default:
                     skip(parser);
             }
         }
-        return new FlashCard(id, projId, stack, question, answer);
+        return new Media(id,cardId,pathToMedia,picType);
     }
+
 
 }

@@ -16,8 +16,8 @@ import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 public class FlashCardContract {
 
     private static final String TAG = FlashCardContract.class.getSimpleName();
-
-    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + FlashCardContract.FlashCardEntry.TABLE_NAME);
+    public static final String TABLE_NAME = "_TBL_FLASHCARDS";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + TABLE_NAME);
 
     // prevent instantiation
     private FlashCardContract(){}
@@ -36,8 +36,6 @@ public class FlashCardContract {
      */
     public static abstract class FlashCardEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "_TBL_FLASHCARDS";
-
         public static final String COLUMN_NAME_QUESTION = "_QUESTION";
         public static final String COLUMN_NAME_ANSWER = "_ANSWER";
         public static final String COLUMN_NAME_STACK = "_STACK";
@@ -50,8 +48,8 @@ public class FlashCardContract {
         public static final String COLUMN_NAME_FK_P_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_P_ID;
     }
 
-    private static final String DATABASE_CREATE = "create table if not exists "
-            + FlashCardEntry.TABLE_NAME
+   private static final String DATABASE_CREATE = "create table if not exists "
+            + TABLE_NAME
             + "("
             + FlashCardEntry._ID + " integer primary key autoincrement, "
             + FlashCardEntry.COLUMN_NAME_QUESTION + " text not null, "
@@ -59,12 +57,12 @@ public class FlashCardContract {
             + FlashCardEntry.COLUMN_NAME_STACK + " integer not null, "
             + FlashCardEntry.COLUMN_NAME_FK_P_ID + " integer, "
             + "foreign key (" + FlashCardEntry.COLUMN_NAME_FK_P_ID + ") references "
-            +  ProjectContract.ProjectEntry.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
+            +  ProjectContract.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
             + ");";
 
     public static void onCreate (SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-        Log.d(TAG, DATABASE_CREATE);
+        Log.i(TAG, DATABASE_CREATE);
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {

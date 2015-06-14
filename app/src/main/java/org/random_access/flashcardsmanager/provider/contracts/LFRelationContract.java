@@ -16,8 +16,8 @@ import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 public class LFRelationContract {
 
     private static final String TAG = LFRelationContract.class.getSimpleName();
-
-    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + LFRelationContract.LFRelEntry.TABLE_NAME);
+    public static final String TABLE_NAME = "_TBL_LFRELATIONS";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + TABLE_NAME);
 
     // prevent instantiation
     private LFRelationContract() {}
@@ -34,8 +34,6 @@ public class LFRelationContract {
      */
     public static abstract class LFRelEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "_TBL_LFRELATIONS";
-
         public static final String COLUMN_NAME_FK_L_ID = "_FK_L_ID";
         public static final String COLUMN_NAME_FK_F_ID = "_FK_F_ID";
 
@@ -45,20 +43,20 @@ public class LFRelationContract {
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
-            + LFRelEntry.TABLE_NAME
+            + TABLE_NAME
             + "("
             + LFRelEntry._ID + " integer primary key autoincrement, "
             + LFRelEntry.COLUMN_NAME_FK_L_ID + " integer, "
             + LFRelEntry.COLUMN_NAME_FK_F_ID + " integer, "
             + "foreign key (" + LFRelEntry.COLUMN_NAME_FK_L_ID + ") references "
-            +  LabelContract.LabelEntry.TABLE_NAME + " (" + LabelContract.LabelEntry._ID + "), "
+            +  LabelContract.TABLE_NAME + " (" + LabelContract.LabelEntry._ID + "), "
             + "foreign key (" + LFRelEntry.COLUMN_NAME_FK_F_ID + ") references "
-            +  FlashCardContract.FlashCardEntry.TABLE_NAME + " (" + FlashCardContract.FlashCardEntry._ID + ")"
+            +  FlashCardContract.TABLE_NAME + " (" + FlashCardContract.FlashCardEntry._ID + ")"
             + ");";
 
     public static void onCreate (SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-        Log.d(TAG, DATABASE_CREATE);
+        Log.i(TAG, DATABASE_CREATE);
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {

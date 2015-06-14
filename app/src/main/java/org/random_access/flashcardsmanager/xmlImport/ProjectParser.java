@@ -59,11 +59,11 @@ public class ProjectParser extends XMLParser{
     }
 
     public static class Project {
-        public final int id;
+        public final long id;
         public final String title;
         public final int noOfStacks;
 
-        private Project(int id, String title, int noOfStacks) {
+        private Project(long id, String title, int noOfStacks) {
             this.id = id;
             this.title = title;
             this.noOfStacks = noOfStacks;
@@ -73,7 +73,7 @@ public class ProjectParser extends XMLParser{
     // Parses the contents of an entry
     private Project readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, ELEM_BASE_ENTRY);
-        int id = 0;
+        long id = 0;
         String title = null;
         int noOfStacks = 0;
         while (parser.next() != XmlPullParser.END_TAG) {

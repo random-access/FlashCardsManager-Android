@@ -15,6 +15,7 @@ import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract
 import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
 import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
 import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.StatsContract;
 
 import java.util.HashMap;
 
@@ -36,12 +37,14 @@ public class FlashCardsProvider extends ContentProvider {
     private static final int FLASHCARD_TABLE = 3;
     private static final int LFREL_TABLE = 4;
     private static final int MEDIA_TABLE = 5;
+    private static final int STATS_TABLE = 6;
 
     private static final int PROJECT_ROW = 10;
     private static final int LABEL_ROW = 11;
     private static final int FLASHCARD_ROW = 12;
     private static final int LFREL_ROW = 13;
     private static final int MEDIA_ROW = 14;
+    private static final int STATS_ROW = 15;
 
     private static final int FLASHCARDS_FROM_LABELS = 20;
 
@@ -52,23 +55,26 @@ public class FlashCardsProvider extends ContentProvider {
     private static HashMap<String, String> PROJECTION_MAP_FLASHCARDS;
     private static HashMap<String, String> PROJECTION_MAP_LFRELS;
     private static HashMap<String, String> PROJECTION_MAP_MEDIA;
+    private static HashMap<String, String> PROJECTION_MAP_STATS;
     private static HashMap<String, String> PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS;
 
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        uriMatcher.addURI(AUTHORITY, ProjectContract.ProjectEntry.TABLE_NAME, PROJECT_TABLE);
-        uriMatcher.addURI(AUTHORITY, LabelContract.LabelEntry.TABLE_NAME, LABEL_TABLE);
-        uriMatcher.addURI(AUTHORITY, FlashCardContract.FlashCardEntry.TABLE_NAME, FLASHCARD_TABLE);
-        uriMatcher.addURI(AUTHORITY, LFRelationContract.LFRelEntry.TABLE_NAME, LFREL_TABLE);
-        uriMatcher.addURI(AUTHORITY, MediaContract.MediaEntry.TABLE_NAME, MEDIA_TABLE);
+        uriMatcher.addURI(AUTHORITY, ProjectContract.TABLE_NAME, PROJECT_TABLE);
+        uriMatcher.addURI(AUTHORITY, LabelContract.TABLE_NAME, LABEL_TABLE);
+        uriMatcher.addURI(AUTHORITY, FlashCardContract.TABLE_NAME, FLASHCARD_TABLE);
+        uriMatcher.addURI(AUTHORITY, LFRelationContract.TABLE_NAME, LFREL_TABLE);
+        uriMatcher.addURI(AUTHORITY, MediaContract.TABLE_NAME, MEDIA_TABLE);
+        uriMatcher.addURI(AUTHORITY, StatsContract.TABLE_NAME, STATS_TABLE);
 
-        uriMatcher.addURI(AUTHORITY, ProjectContract.ProjectEntry.TABLE_NAME + "/#", PROJECT_ROW);
-        uriMatcher.addURI(AUTHORITY, LabelContract.LabelEntry.TABLE_NAME + "/#", LABEL_ROW);
-        uriMatcher.addURI(AUTHORITY, FlashCardContract.FlashCardEntry.TABLE_NAME + "/#", FLASHCARD_ROW);
-        uriMatcher.addURI(AUTHORITY, LFRelationContract.LFRelEntry.TABLE_NAME + "/#", LFREL_ROW);
-        uriMatcher.addURI(AUTHORITY, MediaContract.MediaEntry.TABLE_NAME + "/#", MEDIA_ROW);
+        uriMatcher.addURI(AUTHORITY, ProjectContract.TABLE_NAME + "/#", PROJECT_ROW);
+        uriMatcher.addURI(AUTHORITY, LabelContract.TABLE_NAME + "/#", LABEL_ROW);
+        uriMatcher.addURI(AUTHORITY, FlashCardContract.TABLE_NAME + "/#", FLASHCARD_ROW);
+        uriMatcher.addURI(AUTHORITY, LFRelationContract.TABLE_NAME + "/#", LFREL_ROW);
+        uriMatcher.addURI(AUTHORITY, MediaContract.TABLE_NAME + "/#", MEDIA_ROW);
+        uriMatcher.addURI(AUTHORITY, StatsContract.TABLE_NAME + "/#", STATS_ROW);
 
         uriMatcher.addURI(AUTHORITY, DbJoins.NAME_FLASHCARDS_JOIN_LFRELS, FLASHCARDS_FROM_LABELS);
 
@@ -104,6 +110,14 @@ public class FlashCardsProvider extends ContentProvider {
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_MEDIAPATH, MediaContract.MediaEntry.COLUMN_NAME_MEDIAPATH_FULLNAME);
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_PICTYPE, MediaContract.MediaEntry.COLUMN_NAME_PICTYPE_FULLNAME);
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID, MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID_FULLNAME);
+
+        PROJECTION_MAP_STATS = new HashMap<>();
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry._ID, StatsContract.StatsEntry.COLUMN_NAME_ID_FULLNAME);
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_DATE, StatsContract.StatsEntry.COLUMN_NAME_DATE_FULLNAME);
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_WRONG_ANSWERS, StatsContract.StatsEntry.COLUMN_NAME_WRONG_ANSWERS_FULLNAME);
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_RIGHT_ANSWERS, StatsContract.StatsEntry.COLUMN_NAME_RIGHT_ANSWERS_FULLNAME);
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_NEUTRAL_ANSWERS, StatsContract.StatsEntry.COLUMN_NAME_NEUTRAL_ANSWERS_FULLNAME);
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_FK_P_ID, StatsContract.StatsEntry.COLUMN_NAME_FK_P_ID_FULLNAME);
 
         PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS = new HashMap<>();
         PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS.putAll(PROJECTION_MAP_FLASHCARDS);
@@ -221,6 +235,9 @@ public class FlashCardsProvider extends ContentProvider {
             case MEDIA_TABLE:
             case MEDIA_ROW:
                 return MediaContract.CONTENT_URI;
+            case STATS_TABLE:
+            case STATS_ROW:
+                return StatsContract.CONTENT_URI;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uriCode);
         }
@@ -249,6 +266,9 @@ public class FlashCardsProvider extends ContentProvider {
             case MEDIA_TABLE:
             case MEDIA_ROW:
                 return PROJECTION_MAP_MEDIA;
+            case STATS_TABLE:
+            case STATS_ROW:
+                return PROJECTION_MAP_STATS;
             case FLASHCARDS_FROM_LABELS:
             case FLASHCARDS_FROM_LABELS_ROW:
                 return PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS;
@@ -267,19 +287,22 @@ public class FlashCardsProvider extends ContentProvider {
         switch(uriCode) {
             case PROJECT_TABLE:
             case PROJECT_ROW:
-                return ProjectContract.ProjectEntry.TABLE_NAME;
+                return ProjectContract.TABLE_NAME;
             case LABEL_TABLE:
             case LABEL_ROW:
-                return LabelContract.LabelEntry.TABLE_NAME;
+                return LabelContract.TABLE_NAME;
             case FLASHCARD_TABLE:
             case FLASHCARD_ROW:
-                return FlashCardContract.FlashCardEntry.TABLE_NAME;
+                return FlashCardContract.TABLE_NAME;
             case LFREL_TABLE:
             case LFREL_ROW:
-                return LFRelationContract.LFRelEntry.TABLE_NAME;
+                return LFRelationContract.TABLE_NAME;
             case MEDIA_TABLE:
             case MEDIA_ROW:
-                return MediaContract.MediaEntry.TABLE_NAME;
+                return MediaContract.TABLE_NAME;
+            case STATS_TABLE:
+            case STATS_ROW:
+                return StatsContract.TABLE_NAME;
             case FLASHCARDS_FROM_LABELS:
             case FLASHCARDS_FROM_LABELS_ROW:
                 return DbJoins.TABLES_FLASHCARDS_JOIN_LFRELS;
@@ -306,6 +329,8 @@ public class FlashCardsProvider extends ContentProvider {
                 return LFRelationContract.LFRelEntry._ID;
             case MEDIA_ROW:
                 return MediaContract.MediaEntry._ID;
+            case STATS_ROW:
+                return StatsContract.StatsEntry._ID;
             case FLASHCARDS_FROM_LABELS_ROW:
                 return FlashCardContract.FlashCardEntry._ID;
             default:

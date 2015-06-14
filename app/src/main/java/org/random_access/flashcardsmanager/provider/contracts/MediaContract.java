@@ -16,7 +16,8 @@ import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 public class MediaContract {
 
     private static final String TAG = MediaContract.class.getSimpleName();
-    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + MediaContract.MediaEntry.TABLE_NAME);
+    public static final String TABLE_NAME = "_TBL_MEDIA";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + TABLE_NAME);
 
     // prevent instantiation
     private MediaContract() {}
@@ -34,8 +35,6 @@ public class MediaContract {
      */
     public static abstract class MediaEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "_TBL_MEDIA";
-
         public static final String COLUMN_NAME_MEDIAPATH = "_MEDIA_PATH";
         public static final String COLUMN_NAME_PICTYPE = "_PIC_TYPE";
         public static final String COLUMN_NAME_FK_F_ID = "_FK_F_ID";
@@ -47,19 +46,19 @@ public class MediaContract {
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
-            + MediaEntry.TABLE_NAME
+            + TABLE_NAME
             + "("
             + MediaEntry._ID + " integer primary key autoincrement, "
             + MediaEntry.COLUMN_NAME_MEDIAPATH + " text not null, "
             + MediaEntry.COLUMN_NAME_PICTYPE + " text not null, "
             + MediaEntry.COLUMN_NAME_FK_F_ID + " integer, "
             + "foreign key (" + MediaEntry.COLUMN_NAME_FK_F_ID + ") references "
-            + FlashCardContract.FlashCardEntry.TABLE_NAME + " (" + FlashCardContract.FlashCardEntry._ID + ")"
+            + FlashCardContract.TABLE_NAME + " (" + FlashCardContract.FlashCardEntry._ID + ")"
             + ");";
 
     public static void onCreate (SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-        Log.d(TAG, DATABASE_CREATE);
+        Log.i(TAG, DATABASE_CREATE);
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {

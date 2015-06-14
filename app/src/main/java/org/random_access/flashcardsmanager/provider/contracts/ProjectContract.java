@@ -16,7 +16,8 @@ import org.random_access.flashcardsmanager.provider.FlashCardsProvider;
 public class ProjectContract {
 
     private static final String TAG = ProjectContract.class.getSimpleName();
-    public static final Uri  CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + ProjectContract.ProjectEntry.TABLE_NAME);
+    public static final String TABLE_NAME = "_TBL_PROJECTS";
+    public static final Uri  CONTENT_URI = Uri.parse("content://" + FlashCardsProvider.AUTHORITY + "/" + TABLE_NAME);
 
     // prevent instantiation
     private ProjectContract() {}
@@ -33,8 +34,6 @@ public class ProjectContract {
      */
     public static abstract class ProjectEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "_TBL_PROJECTS";
-
         public static final String COLUMN_NAME_TITLE = "_TITLE";
         public static final String COLUMN_NAME_DESCRIPTION = "_DESCRIPTION";
         public static final String COLUMN_NAME_STACKS = "_STACKS";
@@ -46,7 +45,7 @@ public class ProjectContract {
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
-            + ProjectEntry.TABLE_NAME
+            + TABLE_NAME
             + "("
             + ProjectEntry._ID + " integer primary key autoincrement, "
             + ProjectEntry.COLUMN_NAME_TITLE + " text not null, "
@@ -56,7 +55,7 @@ public class ProjectContract {
 
     public static void onCreate (SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
-        Log.d(TAG, DATABASE_CREATE);
+        Log.i(TAG, DATABASE_CREATE);
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {

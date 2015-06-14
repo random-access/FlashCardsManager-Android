@@ -122,4 +122,5 @@
         <item>28</item>
         <item>32</item>
     </string-array>
+    <string name="stacks_plural">Stapel</string>
 </resources>

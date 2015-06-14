@@ -1,4 +1,4 @@
-package org.random_access.flashcardsmanager.tests;
+package org.random_access.flashcardsmanager.samples;
 
 import android.content.Context;
 

@@ -10,6 +10,7 @@ import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract
 import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
 import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
 import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
+import org.random_access.flashcardsmanager.provider.contracts.StatsContract;
 
 /**
  * Project: FlashCards Manager for Android
@@ -39,6 +40,7 @@ public class FlashCardDbOpenHelper extends SQLiteOpenHelper {
         LabelContract.onCreate(db);
         LFRelationContract.onCreate(db);
         MediaContract.onCreate(db);
+        StatsContract.onCreate(db);
         Log.d(TAG, "Finished onCreate in FlashCardDbOpenHelper");
     }
 
@@ -55,6 +57,7 @@ public class FlashCardDbOpenHelper extends SQLiteOpenHelper {
         FlashCardContract.onUpdate(db, oldVersion, newVersion);
         LFRelationContract.onUpdate(db, oldVersion, newVersion);
         MediaContract.onUpdate(db, oldVersion, newVersion);
+        StatsContract.onUpdate(db, oldVersion, newVersion);
     }
 
 }
