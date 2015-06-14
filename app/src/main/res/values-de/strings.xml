@@ -100,4 +100,26 @@
     <string name="download_url_missing">Download-URL fehlt :( \n\nBitte gib eine Download-URL an!</string>
     <string name="pref_font_size_text">Schriftgröße</string>
     <string name="pref_text_title">Texteinstellungen</string>
+    <string name="title_activity_learning_settings">LearningSettingsActivity</string>
+
+    <string-array name="pref_font_size_text_entries">
+        <item>12</item>
+        <item>14</item>
+        <item>16 (klein)</item>
+        <item>18</item>
+        <item>20</item>
+        <item>24 (mittel)</item>
+        <item>28</item>
+        <item>32 (groß)</item>
+    </string-array>
+    <string-array name="pref_font_size_text_values">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>24</item>
+        <item>28</item>
+        <item>32</item>
+    </string-array>
 </resources>

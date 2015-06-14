@@ -124,12 +124,12 @@
     <string-array name="pref_font_size_text_entries">
         <item>12</item>
         <item>14</item>
-        <item>16 (klein)</item>
+        <item>16 (small)</item>
         <item>18</item>
         <item>20</item>
-        <item>24 (mittel)</item>
+        <item>24 (medium)</item>
         <item>28</item>
-        <item>32 (groß)</item>
+        <item>32 (large)</item>
     </string-array>
     <string-array name="pref_font_size_text_values">
         <item>12</item>
