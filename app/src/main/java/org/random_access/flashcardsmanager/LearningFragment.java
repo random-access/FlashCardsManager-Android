@@ -17,6 +17,7 @@ public class LearningFragment extends Fragment {
     private Map<Long, Integer> progressChanges = new HashMap<>();
     private Map<Long, LearningActivity.Result> statsTracking = new HashMap<>();
     private int cursorPosition;
+    private boolean isAnswerVisible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,5 +47,13 @@ public class LearningFragment extends Fragment {
 
     public void setCursorPosition(int cursorPosition) {
         this.cursorPosition = cursorPosition;
+    }
+
+    public boolean isAnswerVisible() {
+        return isAnswerVisible;
+    }
+
+    public void setIsAnswerVisible(boolean isAnswerVisible) {
+        this.isAnswerVisible = isAnswerVisible;
     }
 }

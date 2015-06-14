@@ -66,7 +66,11 @@ public class XMLImportActivity extends AppCompatActivity {
                     new DownloadXmlTask().execute(downloadUrl);
                 } else {
                     tvShowDownload.setVisibility(View.VISIBLE);
-                    tvShowDownload.setText(getResources().getString(R.string.network_error));
+                    if (!isOnline()) {
+                        tvShowDownload.setText(getResources().getString(R.string.network_error));
+                    } else {
+                        tvShowDownload.setText(R.string.download_url_missing);
+                    }
                 }
             }
         });
@@ -117,7 +121,6 @@ public class XMLImportActivity extends AppCompatActivity {
                 loadXmlFromNetwork(urls[0]);
                 XMLExchanger xmlExchanger = new XMLExchanger(XMLImportActivity.this, IMPORT_DIR);
                 xmlExchanger.importProjects();
-                Log.d(TAG, "Finished import");
                 deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
                 return getResources().getString(R.string.finished);
             } catch (IOException e) {
@@ -139,9 +142,7 @@ public class XMLImportActivity extends AppCompatActivity {
         InputStream stream = null;
         try {
             stream = downloadUrl(urlString);
-            Log.d(TAG, "Finished download from " + urlString);
             UnzipHelper.unzip(stream, getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR, XMLImportActivity.this);
-            Log.d(TAG, "Finished unzipping");
         } finally {
             if (stream != null) {
                 stream.close();
@@ -153,7 +154,6 @@ public class XMLImportActivity extends AppCompatActivity {
         boolean success = true;
         if (path.isDirectory()) {
             for (File f : path.listFiles()) {
-                Log.d("Test", "Deleting " + f.getAbsolutePath() + "...");
                 success &= deleteRecursive(f);
             }
         }  else {

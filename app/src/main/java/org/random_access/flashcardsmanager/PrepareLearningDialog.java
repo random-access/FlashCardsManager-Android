@@ -11,15 +11,22 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.random_access.flashcardsmanager.helpers.MyListUtils;
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
+import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
 import org.random_access.flashcardsmanager.queries.LabelQueries;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
 import org.random_access.flashcardsmanager.queries.QueryHelper;
@@ -34,11 +41,13 @@ public class PrepareLearningDialog extends DialogFragment {
 
     public static final String KEY_PROJECT_ID = "project-id";
 
-    private String[] C_LIST_PROJECTION = { FlashCardContract.FlashCardEntry._ID,
+   private String[] C_LIST_PROJECTION = { FlashCardContract.FlashCardEntry._ID,
             FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID,
             FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK,
             FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION,
-            FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER};
+            FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER,
+            LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID
+    };
 
     private Resources res;
     private long projectId;
@@ -46,11 +55,13 @@ public class PrepareLearningDialog extends DialogFragment {
     private TextView tvNumberOfMatches;
     private ListView lvStacks, lvLabels;
     private ImageButton btnShowStacklist, btnShowLabellist;
+    private RadioGroup rgSearchCriteria;
+    private CheckBox chkRandomize;
 
     private View dialogView;
     private Dialog dialog;
 
-    private String[] checkedLabelList;
+    private long[] checkedLabelList;
     private int[] checkedStacksList;
 
     public static PrepareLearningDialog newInstance (long projectId) {
@@ -71,14 +82,15 @@ public class PrepareLearningDialog extends DialogFragment {
         setListeners();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(dialogView)
-                .setPositiveButton(res.getText(R.string.yes), new DialogInterface.OnClickListener() {
+                .setPositiveButton(res.getText(R.string.learn), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(getActivity(),LearningActivity.class);
                         intent.putExtra(LearningActivity.KEY_PROJECT, projectId);
                         intent.putExtra(LearningActivity.KEY_STACKS, checkedStacksList);
                         intent.putExtra(LearningActivity.KEY_LABELS, checkedLabelList);
-                        intent.putExtra(LearningActivity.KEY_RANDOM, false); // TODO
+                        intent.putExtra(LearningActivity.KEY_RANDOM, chkRandomize.isChecked()); // TODO implement random mode
+                        intent.putExtra(LearningActivity.KEY_CONJUNCTION, getConjunctionString());
                         startActivity(intent);
                     }
                 })
@@ -96,11 +108,29 @@ public class PrepareLearningDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         displayNumberOfMatches();
+        rgSearchCriteria.check(R.id.choice_or);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+        }
+    }
+
+    private String getConjunctionString() {
+        int id = rgSearchCriteria.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.choice_and:
+                return "AND";
+            case R.id.choice_or:
+                return "OR";
+            default:
+                return ""; // TODO exc. handling
+        }
     }
 
     private void getViewElems () {
         lvLabels = (ListView) dialogView.findViewById(R.id.list_label_selection);
         lvStacks = (ListView) dialogView.findViewById(R.id.list_stack_selection);
+        rgSearchCriteria = (RadioGroup)dialogView.findViewById(R.id.choice_search_criteria);
+        chkRandomize = (CheckBox) dialogView.findViewById(R.id.choice_random);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             btnShowLabellist = (ImageButton) dialogView.findViewById(R.id.btn_show_labellist);
             btnShowStacklist = (ImageButton) dialogView.findViewById(R.id.btn_show_stacklist);
@@ -136,7 +166,7 @@ public class PrepareLearningDialog extends DialogFragment {
             };
         }
 
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+        AdapterView.OnItemClickListener selectionChangeListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 displayNumberOfMatches();
@@ -146,18 +176,14 @@ public class PrepareLearningDialog extends DialogFragment {
             btnShowLabellist.setOnClickListener(btnListener);
             btnShowStacklist.setOnClickListener(btnListener);
         }
-        lvStacks.setOnItemClickListener(clickListener);
-        lvLabels.setOnItemClickListener(clickListener);
-    }
-
-
-    private int[] buildIntArray(ArrayList<Integer> integerList) {
-        int[] intArray = new int[integerList.size()];
-        int i = 0;
-        for (Integer n : integerList) {
-            intArray[i++] = n;
-        }
-        return intArray;
+        lvStacks.setOnItemClickListener(selectionChangeListener);
+        lvLabels.setOnItemClickListener(selectionChangeListener);
+        rgSearchCriteria.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                displayNumberOfMatches();
+            }
+        });
     }
 
     private void setupView() {
@@ -165,9 +191,9 @@ public class PrepareLearningDialog extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_checked, labels);
         lvLabels.setAdapter(adapter);
         lvLabels.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        for (int i = 0; i < labels.size(); i++){
+        /*for (int i = 0; i < labels.size(); i++){
             lvLabels.setItemChecked(i,true);
-        }
+        }*/
         ArrayList<String> stacks = new ArrayList<>();
         for (int i = 1; i <= new ProjectQueries(getActivity()).getNumberOfStacks(projectId); i++) {
             stacks.add(res.getString(R.string.stacks) + " " + i);
@@ -175,20 +201,21 @@ public class PrepareLearningDialog extends DialogFragment {
         ArrayAdapter<String> stackAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_checked, stacks);
         lvStacks.setAdapter(stackAdapter);
         lvStacks.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        for (int i= 0; i < stacks.size(); i++) {
+        /*for (int i= 0; i < stacks.size(); i++) {
             lvStacks.setItemChecked(i,true);
-        }
+        }*/
     }
 
     private void displayNumberOfMatches() {
+        LabelQueries labelQueries = new LabelQueries (getActivity());
         // get current selection of labels
-        ArrayList<String> checkedLabels = new ArrayList<>();
+        ArrayList<Long> checkedLabelIds = new ArrayList<>();
         for (int i = 0; i < lvLabels.getAdapter().getCount(); i++) {
             if (lvLabels.isItemChecked(i)) {
-                checkedLabels.add((String)lvLabels.getAdapter().getItem(i));
+                checkedLabelIds.add(labelQueries.getLabelId((String) lvLabels.getAdapter().getItem(i), projectId));
             }
         }
-        checkedLabelList = checkedLabels.toArray(new String[checkedLabels.size()]);
+        checkedLabelList = MyListUtils.buildLongArray(checkedLabelIds);
 
         // get current selection of items
         ArrayList<Integer> checkedItems = new ArrayList<>();
@@ -197,10 +224,10 @@ public class PrepareLearningDialog extends DialogFragment {
                 checkedItems.add(i);
             }
         }
-        checkedStacksList = buildIntArray(checkedItems);
+        checkedStacksList = MyListUtils.buildIntArray(checkedItems);
 
         // query database how many cards match this criteria
-        String where = QueryHelper.buildFlashcardFilterWhereString(checkedLabelList.length, checkedStacksList.length);
+        String where = QueryHelper.buildFlashcardFilterWhereString(checkedLabelList.length, checkedStacksList.length, getConjunctionString());
         Log.d(TAG, where);
         String[] arguments = QueryHelper.buildFlashcardFilterArgumentString(projectId, checkedStacksList, checkedLabelList);
         Log.d(TAG, Arrays.toString(arguments));

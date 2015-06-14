@@ -51,7 +51,6 @@ public class ProjectDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mIsNewProject = getArguments().getBoolean(TAG_IS_NEW_PROJECT);
         mProjectId = getArguments().getLong(TAG_PROJECT_ID);
-        Log.d(TAG, "bundle project id = " + mProjectId);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_project, null);
         res = getResources();
@@ -62,13 +61,13 @@ public class ProjectDialogFragment extends DialogFragment {
             Cursor cursor = new ProjectQueries(getActivity()).getProjectWithId(mProjectId);
             cursor.moveToFirst();
             title.setText(cursor.getString(1));
-            Log.d(TAG, "current title = " + cursor.getString(1));
             description.setText(cursor.getString(2));
             stacks.setText(cursor.getInt(3) + "");
             cursor.close();
         }
         title.requestFocus();
-        MyAlertDialog d = new MyAlertDialog(getActivity(), getResources().getString(R.string.p_add), dialogView);
+        String dialogTitle = mIsNewProject ? getResources().getString(R.string.p_add) : getResources().getString(R.string.p_edit);
+        MyAlertDialog d = new MyAlertDialog(getActivity(), dialogTitle, dialogView);
         d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         return d;
     }

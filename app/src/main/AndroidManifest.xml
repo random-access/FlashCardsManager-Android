@@ -42,6 +42,10 @@
             android:name=".XMLImportActivity"
             android:label="@string/title_activity_xml_import" >
         </activity>
+        <activity
+            android:name=".LearningSettingsActivity"
+            android:label="@string/title_activity_learning_settings">
+        </activity>
     </application>
 
 </manifest>

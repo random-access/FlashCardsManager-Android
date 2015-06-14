@@ -21,8 +21,8 @@
                 android:id="@+id/label_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 android:text="@string/c_question"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
                 android:paddingBottom="5dp"/>
 
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/c_answer"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
                 android:textColor="#000000"
                 android:paddingBottom="5dp"
                 android:visibility="gone"/>

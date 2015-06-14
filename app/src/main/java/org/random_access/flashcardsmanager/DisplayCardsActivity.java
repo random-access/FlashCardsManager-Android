@@ -44,11 +44,10 @@ public class DisplayCardsActivity extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "in oncreate");
         Bundle extras = getIntent().getExtras();
         mCurrentProject = extras.getLong(DisplayProjectsActivity.TAG_PROJECT_ID);
         mCurrentLabel = extras.getLong(DisplayLabelsActivity.TAG_LABEL_ID);
-        setTitle("Cards");
+        setTitle(getResources().getString(R.string.cards));
         setContentView(R.layout.activity_display_cards);
         mCardListView = (ListView) findViewById(R.id.list_cards);
         mCardListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -102,7 +101,6 @@ public class DisplayCardsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "in onLoadFinished");
         mCardAdapter.swapCursor(data);
     }
 
@@ -175,7 +173,7 @@ public class DisplayCardsActivity extends AppCompatActivity implements
 
                 switch (item.getItemId()) {
                     case R.id.action_edit_card:
-                        Toast.makeText(DisplayCardsActivity.this, "Edit selected cards", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DisplayCardsActivity.this, getResources().getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
                         mode.finish(); // Action picked, so close the CAB
                         return true;
                     case R.id.action_delete_card:

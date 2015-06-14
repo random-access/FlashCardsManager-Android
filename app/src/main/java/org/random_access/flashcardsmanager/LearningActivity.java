@@ -5,10 +5,13 @@ import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -36,18 +39,19 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     private static final String SAVE_PROGRESS_TAG = "save-progress-tag";
     private static final String SHOW_STATS_TAG = "show-stats-tag";
 
-    public static final String KEY_PROJECT = "tag-project";
-    public static final String KEY_STACKS = "tag-stacks";
-    public static final String KEY_LABELS = "tag-labels";
-    public static final String KEY_RANDOM = "tag-random";
+    public static final String KEY_PROJECT = "key-project";
+    public static final String KEY_STACKS = "key-stacks";
+    public static final String KEY_LABELS = "key-labels";
+    public static final String KEY_RANDOM = "key-random";
+    public static final String KEY_CONJUNCTION = "key-conjunction";
 
     private long projectId;
     private int[] stacks;
+    private long[] labels;
     private boolean random;
-    private String[] labels;
+    private String conjunction;
 
-    private TextView lblAnswer;
-    private TextView txtQuestion, txtAnswer;
+    private TextView txtQuestion, txtAnswer, lblQuestion, lblAnswer;
     private ImageButton btnPrevious, btnNext, btnRight, btnWrong, btnSwitch;
 
     private Cursor cardCursor;
@@ -67,6 +71,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     private Map<Long, Integer> progressChanges = new HashMap<>();
     private Map<Long, LearningActivity.Result> statsTracking = new HashMap<>();
     private int cursorPosition = -1;
+    private boolean answerVisibilty = false;
 
     private LearningFragment learningFragment;
 
@@ -81,6 +86,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(this, R.xml.learning_preferences, false);
         getExtras();
         setContentView(R.layout.activity_learning);
         getViewElems();
@@ -105,6 +111,8 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, LearningSettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -125,6 +133,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
             learningFragment.setProgressChanges(progressChanges);
             learningFragment.setStatsTracking(statsTracking);
             learningFragment.setCursorPosition(cursorPosition);
+            learningFragment.setIsAnswerVisible(txtAnswer.getVisibility() == View.VISIBLE);
         }
     }
 
@@ -167,17 +176,21 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
             progressChanges = learningFragment.getProgressChanges();
             statsTracking = learningFragment.getStatsTracking();
             cursorPosition = learningFragment.getCursorPosition();
+            answerVisibilty = learningFragment.isAnswerVisible();
         }
     }
 
     private void getExtras() {
-        projectId = getIntent().getExtras().getLong(KEY_PROJECT);
-        stacks = getIntent().getExtras().getIntArray(KEY_STACKS);
-        random = getIntent().getExtras().getBoolean(KEY_RANDOM);
-        labels = getIntent().getExtras().getStringArray(KEY_LABELS);
+        Bundle extras = getIntent().getExtras();
+        projectId = extras.getLong(KEY_PROJECT);
+        stacks = extras.getIntArray(KEY_STACKS);
+        random = extras.getBoolean(KEY_RANDOM);
+        labels = extras.getLongArray(KEY_LABELS);
+        conjunction = extras.getString(KEY_CONJUNCTION);
     }
 
     private void getViewElems () {
+        lblQuestion = (TextView)findViewById(R.id.label_question);
         lblAnswer = (TextView)findViewById(R.id.label_answer);
         txtQuestion = (TextView)findViewById(R.id.text_question);
         txtAnswer = (TextView)findViewById(R.id.text_answer);
@@ -208,7 +221,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         btnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                manageAnswerVisibility();
+                setAnswerVisibility(txtAnswer.getVisibility() == View.GONE);
             }
         });
         btnRight.setOnClickListener(new View.OnClickListener() {
@@ -226,11 +239,19 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void initView() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int fontSize = Integer.parseInt(sharedPref.getString("pref_fontSizeText", "16"));
+        txtQuestion.setTextSize(fontSize);
+        txtAnswer.setTextSize(fontSize);
+        lblQuestion.setTextSize(fontSize+2);
+        lblAnswer.setTextSize(fontSize+2);
+        Log.d(TAG, "font size = " + fontSize);
         if (cursorPosition == -1) {
             cardCursor.moveToFirst();
         } else {
             cardCursor.moveToPosition(cursorPosition);
         }
+        setAnswerVisibility(answerVisibilty);
         fillFields();
         manageNavigationButtonActivation();
     }
@@ -290,16 +311,10 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         d.show(getFragmentManager(), SHOW_STATS_TAG);
     }
 
-    private void manageAnswerVisibility() {
-        txtAnswer.setVisibility(txtAnswer.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-        lblAnswer.setVisibility(txtAnswer.getVisibility());
-        btnSwitch.setColorFilter(txtAnswer.getVisibility() == View.VISIBLE ? getResources().getColor(R.color.light_blue) : getResources().getColor(R.color.dark_grey));
-    }
-
-    private void hideAnswer() {
-        txtAnswer.setVisibility(View.GONE);
-        lblAnswer.setVisibility(View.GONE);
-        btnSwitch.setColorFilter(getResources().getColor(R.color.dark_grey));
+    private void setAnswerVisibility(boolean visible) {
+        txtAnswer.setVisibility(visible? View.VISIBLE : View.GONE);
+        lblAnswer.setVisibility(visible? View.VISIBLE : View.GONE);
+        btnSwitch.setColorFilter(visible? getResources().getColor(R.color.light_blue) : getResources().getColor(R.color.dark_grey));
     }
 
     private void navigate(Direction d) {
@@ -310,7 +325,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         }
         cursorPosition = cardCursor.getPosition();
         manageNavigationButtonActivation();
-        hideAnswer();
+        setAnswerVisibility(false);
         fillFields();
     }
 
@@ -331,7 +346,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String where = QueryHelper.buildFlashcardFilterWhereString(labels.length, stacks.length);
+        String where = QueryHelper.buildFlashcardFilterWhereString(labels.length, stacks.length, conjunction);
         Log.d(TAG,where);
         String[] arguments = QueryHelper.buildFlashcardFilterArgumentString(projectId, stacks, labels);
         Log.d(TAG, Arrays.toString(arguments));

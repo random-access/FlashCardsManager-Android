@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_text_title"
+        android:key="pref_key_text_settings">
+        <ListPreference
+            android:key="pref_fontSizeText"
+            android:title="@string/pref_font_size_text"
+            android:dialogTitle="@string/pref_font_size_text"
+            android:entries="@array/pref_font_size_text_entries"
+            android:entryValues="@array/pref_font_size_text_values"
+            android:defaultValue="@string/pref_font_size_text_default"
+            android:positiveButtonText="@string/ok" />
+    </PreferenceCategory>
+</PreferenceScreen>

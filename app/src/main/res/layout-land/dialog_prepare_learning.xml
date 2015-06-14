@@ -1,71 +1,127 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
     tools:context="org.random_access.flashcardsmanager.PrepareLearningDialog">
 
 
     <LinearLayout
         android:id="@+id/list_left"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:orientation="vertical">
 
         <TextView android:text="@string/labels"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#000000"
             android:padding="5dp"
             android:layout_gravity="center_vertical" />
+
+        <ListView
+            android:id="@+id/list_label_selection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/list_right"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
         <TextView android:text="@string/stacks"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#000000"
             android:padding="5dp"
             android:layout_gravity="center_vertical" />
 
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:id="@+id/list_right"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <ListView
-            android:id="@+id/list_label_selection"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="wrap_content"/>
-
         <ListView
             android:id="@+id/list_stack_selection"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/number_of_matches"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#000000"
-        android:gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#000000"
+            android:text="@string/match_criteria"
+            android:layout_gravity="center_vertical" />
+
+        <Space
+            android:layout_height="5dp"
+            android:layout_width="wrap_content" />
+
+        <RadioGroup
+            android:id="@+id/choice_search_criteria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/choice_or"
+                android:text="@string/or"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Space
+                android:layout_height="wrap_content"
+                android:layout_width="10dp" />
+
+            <RadioButton
+                android:id="@+id/choice_and"
+                android:text="@string/and"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+        <Space
+            android:layout_height="10dp"
+            android:layout_width="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/choice_random"
+            android:text="@string/random_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/number_of_matches"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:gravity="bottom"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

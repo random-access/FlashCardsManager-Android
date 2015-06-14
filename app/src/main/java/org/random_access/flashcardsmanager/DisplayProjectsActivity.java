@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ActionMode;
@@ -34,8 +35,8 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String TAG = DisplayProjectsActivity.class.getSimpleName();
+
     private static final String TAG_ADD_PROJECT = "add-project";
-    private static final String TAG_IMPORT_PROJECT = "import-project";
 
     public static final String TAG_PROJECT_ID = "project-id";
 
@@ -45,7 +46,6 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "in onCreate");
         setContentView(R.layout.activity_display_projects);
         mProjectListView = (ListView) findViewById(R.id.list_projects);
         mProjectListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -101,7 +101,6 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "in onLoadFinished");
         mProjectAdapter.swapCursor(data);
     }
 
@@ -141,7 +140,6 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                     Toast.makeText(DisplayProjectsActivity.this, getResources().
                             getQuantityString(R.plurals.deleted_project, selCount, selCount), Toast.LENGTH_SHORT).show();
                     break;
-
                 case DialogInterface.BUTTON_NEGATIVE:
                     // user cancelled
                     break;
@@ -160,7 +158,6 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                 } else {
                     mProjectAdapter.setmCurrentDetailPosition(position);
                 }
-                Log.d(TAG, "Set mCurrentDetailView to " + mProjectAdapter.getmCurrentDetailPosition());
             }
         });
 

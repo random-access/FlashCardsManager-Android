@@ -31,6 +31,7 @@
     <string name="stacks">Stack</string>
     <string name="description">Description</string>
     <string name="labels">Labels</string>
+    <string name="cards">Cards</string>
 
     <string name="choose_session_constraints">Choose stacks and labels</string>
 
@@ -43,6 +44,11 @@
     <string name="cancel">Cancel</string>
     <string name="all">All</string>
     <string name="selection">Selection</string>
+    <string name="and">and</string>
+    <string name="or">or</string>
+
+    <string name="random_order">Random order</string>
+    <string name="match_criteria">Matching criteria</string>
 
     <string name="error_empty_field">Field can not be empty!</string>
     <string name="error_enter_number">Please enter a number!</string>
@@ -103,9 +109,37 @@
     <string name="title_activity_learning">LearningActivity</string>
     <string name="title_activity_prepare_learning">PrepareLearningActivity</string>
     <string name="title_activity_xml_import">XMLImportActivity</string>
+    <string name="title_activity_learning_settings">LearningSettingsActivity</string>
     <string name="finished">Successfully imported contents of ZIP ;)</string>
     <string name="connection_error">Connection error :( \n\nPlease make sure that you use an URL that contains a ZIP file with flashcards!</string>
     <string name="network_error">Network error :( \n\nYou seem to have no internet connection&#8230; please enable internet access or start your download later</string>
     <string name="xml_error">Error parsing xml :( \n\nPlease make sure the files you try to download are not corrupted!</string>
+
+    <string name="not_yet_implemented">Not yet implemented but coming soon :)</string>
+    <string name="download_url_missing">Download URL missing :( \n\nPlease enter a download URL!</string>
+
+    <string name="pref_text_title">Text settings</string>
+    <string name="pref_font_size_text">Font size</string>
+    <string name="pref_font_size_text_default" translatable="false">16</string>
+    <string-array name="pref_font_size_text_entries">
+        <item>12</item>
+        <item>14</item>
+        <item>16 (klein)</item>
+        <item>18</item>
+        <item>20</item>
+        <item>24 (mittel)</item>
+        <item>28</item>
+        <item>32 (groß)</item>
+    </string-array>
+    <string-array name="pref_font_size_text_values">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>24</item>
+        <item>28</item>
+        <item>32</item>
+    </string-array>
 
 </resources>

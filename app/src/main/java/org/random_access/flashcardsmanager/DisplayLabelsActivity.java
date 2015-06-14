@@ -46,9 +46,8 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "in OnCreate");
         mCurrentProject = getIntent().getExtras().getLong(DisplayProjectsActivity.TAG_PROJECT_ID);
-        setTitle("Labels");
+        setTitle(getResources().getString(R.string.labels));
         setContentView(R.layout.activity_display_labels);
         mLabelListView = (ListView) findViewById(R.id.list_labels);
         mLabelListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -102,7 +101,6 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "in onLoadFinished");
         mLabelAdapter.swapCursor(data);
     }
 
@@ -189,7 +187,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
 
                 switch (item.getItemId()) {
                     case R.id.action_edit_label:
-                        Toast.makeText(DisplayLabelsActivity.this, "Edit selected labels", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DisplayLabelsActivity.this, getResources().getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
                         mode.finish(); // Action picked, so close the CAB
                         return true;
                     case R.id.action_delete_label:

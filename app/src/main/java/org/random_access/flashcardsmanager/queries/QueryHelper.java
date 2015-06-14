@@ -63,26 +63,26 @@ public class QueryHelper {
         return status;
     }
 
-    public static String[] buildFlashcardFilterArgumentString(long projectId, int[] stacks, String[] labels) {
-        String[] result = new String [labels.length + stacks.length + 1];
+    public static String[] buildFlashcardFilterArgumentString(long projectId, int[] stacks, long[] labelIds) {
+        String[] result = new String [labelIds.length + stacks.length + 1];
         result[0] = Long.toString(projectId);
         for (int i = 0; i < stacks.length; i++) {
             result[1+i] = Integer.toString(stacks[i]);
         }
-        for (int i = 0; i < labels.length; i++) {
-            result[1+stacks.length+i] = labels[i];
+        for (int i = 0; i < labelIds.length; i++) {
+            result[1+stacks.length+i] = Long.toString(labelIds[i]);
         }
         return  result;
     }
 
-    public static String buildFlashcardFilterWhereString(int labelCount, int stacksCount) {
+    public static String buildFlashcardFilterWhereString(int labelCount, int stacksCount, String conjunction) {
         if (labelCount == 0 && stacksCount == 0) {
             return FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID + " = ? ";
         }
         StringBuilder sb = new StringBuilder();
 
         // add project constraint
-        sb.append(FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID).append(" = ? ").append(" AND ");
+        sb.append(FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID).append(" = ? AND ");
 
         // add stacks constraints
         if (stacksCount > 1) sb.append("(");
@@ -92,9 +92,9 @@ public class QueryHelper {
         if (stacksCount > 0) sb.replace(sb.length() - 3, sb.length(), "");
         if (stacksCount > 1) sb.append(")");
 
-        // add AND
+        // add conjunction (AND or OR)
         if (labelCount > 0 && stacksCount > 0) {
-            sb.append(" OR ");
+            sb.append(" ").append(conjunction).append(" ");
         }
 
         // add label constraints
@@ -104,7 +104,6 @@ public class QueryHelper {
         }
         if (labelCount > 0)  sb.replace(sb.length() - 3, sb.length(), "");
         if (labelCount > 1)  sb.append(")");
-
         return sb.toString();
     }
 

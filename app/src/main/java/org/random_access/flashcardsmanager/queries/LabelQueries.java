@@ -45,6 +45,17 @@ public class LabelQueries {
         return labels;
     }
 
+    public long getLabelId(String labelName, long projectId) {
+        Cursor c = context.getContentResolver().query(LabelContract.CONTENT_URI, labelProjection, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ?  AND "
+                + LabelContract.LabelEntry.COLUMN_NAME_TITLE + " = ? ",
+                new String[] {projectId + "", labelName}, null);
+        if (c.moveToFirst() && c.getCount() == 1) {
+            return c.getLong(0);
+        }
+        c.close();
+        return -1; // TODO exception
+    }
+
     public Uri addLabel(long projectId, String labelTitle) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID, projectId);
