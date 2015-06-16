@@ -17,24 +17,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/image_question"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+
             <TextView
                 android:id="@+id/label_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:text="@string/c_question"
-                android:textColor="#000000"
+                android:textColor="@color/dark_grey"
                 android:paddingBottom="5dp"/>
 
             <TextView
                 android:id="@+id/text_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000" />
+                android:textColor="@color/dark_grey" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
+
+
 
             <TextView
                 android:id="@+id/label_answer"
@@ -42,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/c_answer"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/dark_grey"
                 android:paddingBottom="5dp"
                 android:visibility="gone"/>
 
@@ -50,8 +57,13 @@
                 android:id="@+id/text_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="@color/dark_grey"
                 android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/image_answer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

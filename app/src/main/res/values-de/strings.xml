@@ -33,8 +33,8 @@
     <string name="title">Titel</string>
     <string name="c_answer_hint">Antwort eingeben</string>
     <string name="c_question_hint">Frage eingeben</string>
-    <string name="title_activity_display_cards">DisplayCardsActivity</string>
-    <string name="title_activity_display_labels">DisplayLabelsActivity</string>
+    <string name="title_activity_display_cards">Karten</string>
+    <string name="title_activity_display_labels">Labels</string>
 
     <plurals name="really_delete_project">
         <item quantity="one">Wirklich %d Projekt löschen?</item> ,
@@ -69,8 +69,8 @@
     <string name="all">Alle</string>
     <string name="labels">Labels</string>
     <string name="selection">Auswahl</string>
-    <string name="title_activity_learning">LearningActivity</string>
-    <string name="title_activity_prepare_learning">PrepareLearningActivity</string>
+    <string name="title_activity_learning">Lernen</string>
+    <string name="title_activity_prepare_learning">Bitte auswählen&#8230;</string>
     <string name="close">Schließen</string>
     <string name="not_answered">Nicht beantwortet:</string>
     <string name="right_answers">Richtige Antworten:</string>
@@ -82,12 +82,12 @@
     <string name="answer_marked_right">Antwort als richtig markiert</string>
     <string name="answer_marked_wrong">Antwort als falsch markiert</string>
     <string name="uncategorized">Ohne Label</string>
-    <string name="title_activity_xml_import">XMLImportActivity</string>
+    <string name="title_activity_xml_download">Von URL importieren</string>
     <string name="cant_delete">kann nicht gelöscht werden!</string>
-    <string name="download">ZIP herunterladen&#8230;</string>
-    <string name="enter_download_url">Download URL eingeben</string>
+    <string name="download_zip">Datei herunterladen&#8230;</string>
+    <string name="enter_download_url">Download-Link eingeben</string>
     <string name="start_download">Download starten</string>
-    <string name="finished">Inhalt vom ZIP erfolgreich importiert ;)</string>
+    <string name="success_download">Dateien erfolgreich heruntergeladen ;)</string>
     <string name="connection_error">Verbindungsfehler :( \n\nBitte stelle sicher, dass die eingegebene URL eine ZIP-Datei mit Flashcards beinhaltet!</string>
     <string name="network_error">Netzwerkfehler :(\n\nDu hast vermutlich gerade keine Internetverbindung &#8230; Bitte aktiviere die Internetverbindung oder starte den Downlaod später</string>
     <string name="xml_error">Fehler beim XML-Parsen :(\n\n Bitte stelle sicher, dass die heruntergeladenen Dateien nicht beschädigt sind!</string>
@@ -97,10 +97,10 @@
     <string name="match_criteria">Suchkriterium</string>
     <string name="cards">Karten</string>
     <string name="not_yet_implemented">Noch nicht implementiert aber kommt bald :)</string>
-    <string name="download_url_missing">Download-URL fehlt :( \n\nBitte gib eine Download-URL an!</string>
+    <string name="download_link_missing">Download-Link fehlt :( \n\nBitte gib eine Download-URL an!</string>
     <string name="pref_font_size_text">Schriftgröße</string>
     <string name="pref_text_title">Texteinstellungen</string>
-    <string name="title_activity_learning_settings">LearningSettingsActivity</string>
+    <string name="title_activity_learning_settings">Einstellungen - Lernen</string>
 
     <string-array name="pref_font_size_text_entries">
         <item>12</item>
@@ -123,4 +123,10 @@
         <item>32</item>
     </string-array>
     <string name="stacks_plural">Stapel</string>
+    <string name="importing">Datei importieren&#8230;</string>
+    <string name="success_import">Dateien erfolgreich importiert ;)</string>
+    <string name="title_activity_xml_import">Datei herunterladen</string>
+    <string name="please_wait">Bitte warten&#8230;</string>
+    <string name="deleting">Löschen&#8230;</string>
+    <string name="io_error">Datei-Fehler :(\n\nBitte stelle sicher, dass du eine ZIP-Datei mit Lernkarten ausgewählt hast!</string>
 </resources>

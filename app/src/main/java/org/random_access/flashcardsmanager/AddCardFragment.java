@@ -108,26 +108,10 @@ public class AddCardFragment extends DialogFragment {
                 mAnswer.setError(res.getString(R.string.error_empty_field));
             } else {
                 Uri uri = new FlashCardQueries(getContext()).insertCard(question,answer,1, mProjectId);
-                // add flashcard
-                /*ContentValues values = new ContentValues();
-                values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION, question);
-                values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER, answer);
-                values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK, 1);
-                values.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID, mProjectId);
-                Uri uri = getActivity().getContentResolver().insert(FlashCardContract.CONTENT_URI, values); */
-
                 long cardId = Long.parseLong(uri.getLastPathSegment());
-
-                // add label to flashcard
-                /* values = new ContentValues();
-                values.put(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID, cardId);
-                values.put(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID, mLabelId);
-                getActivity().getContentResolver().insert(LFRelationContract.CONTENT_URI, values);*/
                 new FlashCardQueries(getContext()).assignLabelToCard(cardId, mLabelId);
-
                 Toast.makeText(getActivity(), res.getString(R.string.c_add_success), Toast.LENGTH_SHORT).show();
                 dismiss();
-
             }
         }
     }

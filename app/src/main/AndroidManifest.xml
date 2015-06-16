@@ -3,7 +3,8 @@
     package="org.random_access.flashcardsmanager" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -39,12 +40,12 @@
             android:label="@string/title_activity_learning" >
         </activity>
         <activity
-            android:name=".XMLImportActivity"
+            android:name=".XMLDownloadActivity"
             android:label="@string/title_activity_xml_import" >
         </activity>
         <activity
             android:name=".LearningSettingsActivity"
-            android:label="@string/title_activity_learning_settings">
+            android:label="@string/title_activity_learning_settings" >
         </activity>
     </application>
 

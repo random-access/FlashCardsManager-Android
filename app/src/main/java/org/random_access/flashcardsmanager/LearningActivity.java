@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.queries.FlashCardQueries;
+import org.random_access.flashcardsmanager.queries.MediaQueries;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
 import org.random_access.flashcardsmanager.queries.QueryHelper;
 
@@ -53,6 +55,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
     private TextView txtQuestion, txtAnswer, lblQuestion, lblAnswer;
     private ImageButton btnPrevious, btnNext, btnRight, btnWrong, btnSwitch;
+    private ImageView imgQuestion, imgAnswer;
 
     private Cursor cardCursor;
 
@@ -202,6 +205,8 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         btnWrong.setColorFilter(getResources().getColor(R.color.red));
         btnSwitch = (ImageButton)findViewById(R.id.btn_switch);
         btnSwitch.setColorFilter(getResources().getColor(R.color.dark_grey));
+        imgQuestion = (ImageView)findViewById(R.id.image_question);
+        imgAnswer = (ImageView)findViewById(R.id.image_answer);
     }
 
 
@@ -244,7 +249,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         txtQuestion.setTextSize(fontSize);
         txtAnswer.setTextSize(fontSize);
         lblQuestion.setTextSize(fontSize+2);
-        lblAnswer.setTextSize(fontSize+2);
+        lblAnswer.setTextSize(fontSize + 2);
         Log.d(TAG, "font size = " + fontSize);
         if (cursorPosition == -1) {
             cardCursor.moveToFirst();
@@ -314,7 +319,8 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     private void setAnswerVisibility(boolean visible) {
         txtAnswer.setVisibility(visible? View.VISIBLE : View.GONE);
         lblAnswer.setVisibility(visible? View.VISIBLE : View.GONE);
-        btnSwitch.setColorFilter(visible? getResources().getColor(R.color.light_blue) : getResources().getColor(R.color.dark_grey));
+        imgAnswer.setVisibility(visible? View.VISIBLE : View.GONE);
+        btnSwitch.setColorFilter(visible ? getResources().getColor(R.color.light_blue) : getResources().getColor(R.color.dark_grey));
     }
 
     private void navigate(Direction d) {
@@ -331,18 +337,29 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
     private void manageNavigationButtonActivation() {
         btnPrevious.setEnabled(!cardCursor.isFirst());
-        btnPrevious.setColorFilter(btnPrevious.isEnabled() ? getResources().getColor(R.color.dark_grey) : Color.LTGRAY);
+        btnPrevious.setColorFilter(btnPrevious.isEnabled() ? getResources().getColor(R.color.dark_grey) : getResources().getColor(R.color.grey));
         btnNext.setEnabled(!cardCursor.isLast());
-        btnNext.setColorFilter(btnNext.isEnabled() ? getResources().getColor(R.color.dark_grey) : Color.LTGRAY);
+        btnNext.setColorFilter(btnNext.isEnabled() ? getResources().getColor(R.color.dark_grey) : getResources().getColor(R.color.grey));
     }
 
     private void fillFields() {
-        setTitle((cardCursor.getPosition()+1) + " / " + cardCursor.getCount());
+        setTitle((cardCursor.getPosition() + 1) + " / " + cardCursor.getCount());
         txtQuestion.setText(Html.fromHtml(cardCursor.getString(COL_QUESTION)));
         txtAnswer.setText(Html.fromHtml(cardCursor.getString(COL_ANSWER)));
+        addImagesIfPresent(cardCursor.getLong(COL_ID));
     }
 
+    private void addImagesIfPresent (long cardId) {
+        MediaQueries mediaQueries = new MediaQueries(this);
 
+        Bitmap questionPic = mediaQueries.getMediaForFlashcard(projectId, cardId, "q");
+        imgQuestion.setImageBitmap(questionPic);
+        imgQuestion.setAdjustViewBounds(questionPic != null); // makes pic large if present, else takes no space
+
+        Bitmap answerPic = mediaQueries.getMediaForFlashcard(projectId, cardId, "a");
+        imgAnswer.setImageBitmap(answerPic);
+        imgAnswer.setAdjustViewBounds(answerPic != null); // makes pic large if present, else takes no space
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

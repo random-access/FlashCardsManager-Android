@@ -6,9 +6,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,21 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.helpers.MyFileUtils;
-import org.random_access.flashcardsmanager.xmlImport.FlashCardParser;
 import org.random_access.flashcardsmanager.xmlImport.UnzipHelper;
 import org.random_access.flashcardsmanager.xmlImport.XMLExchanger;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * <b>Project:</b> FlashCards Manager for Android <br>
@@ -38,9 +32,9 @@ import java.util.ArrayList;
  * <b>Author:</b> Monika Schrenk <br>
  * <b>E-Mail:</b> software@random-access.org <br>
  */
-public class XMLImportActivity extends AppCompatActivity {
+public class XMLDownloadActivity extends AppCompatActivity {
 
-    private static final String TAG = XMLImportActivity.class.getSimpleName();
+    private static final String TAG = XMLDownloadActivity.class.getSimpleName();
 
     private static final String IMPORT_DIR = "import";
 
@@ -52,7 +46,7 @@ public class XMLImportActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_import_xml);
+        setContentView(R.layout.activity_download_xml);
         getViewElems();
         setListeners();
     }
@@ -60,7 +54,7 @@ public class XMLImportActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_import_xml, menu);
+        getMenuInflater().inflate(R.menu.menu_download_xml, menu);
         return true;
     }
 
@@ -99,7 +93,7 @@ public class XMLImportActivity extends AppCompatActivity {
                     if (!isOnline()) {
                         tvShowDownload.setText(getResources().getString(R.string.network_error));
                     } else {
-                        tvShowDownload.setText(R.string.download_url_missing);
+                        tvShowDownload.setText(R.string.download_link_missing);
                     }
                 }
             }
@@ -113,7 +107,6 @@ public class XMLImportActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    // Implementation of AsyncTask used to download XML feed from stackoverflow.com.
     private class DownloadXmlTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -126,10 +119,10 @@ public class XMLImportActivity extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             try {
                 loadXmlFromNetwork(urls[0]);
-                XMLExchanger xmlExchanger = new XMLExchanger(XMLImportActivity.this, IMPORT_DIR);
+                XMLExchanger xmlExchanger = new XMLExchanger(XMLDownloadActivity.this, IMPORT_DIR);
                 xmlExchanger.importProjects();
                 MyFileUtils.deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
-                return getResources().getString(R.string.finished);
+                return getResources().getString(R.string.success_download);
             } catch (IOException e) {
                 e.printStackTrace();
                 return getResources().getString(R.string.connection_error);
@@ -152,7 +145,7 @@ public class XMLImportActivity extends AppCompatActivity {
         try {
             conn = downloadUrl(urlString);
             InputStream stream = conn.getInputStream();
-            UnzipHelper.unzip(stream, getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR, XMLImportActivity.this);
+            UnzipHelper.unzip(stream, getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR, XMLDownloadActivity.this);
         } finally {
             if (conn != null) {
                 conn.disconnect();

@@ -28,6 +28,7 @@ import org.random_access.flashcardsmanager.ProjectDialogFragment;
 import org.random_access.flashcardsmanager.R;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
 import org.random_access.flashcardsmanager.helpers.Status;
+import org.random_access.flashcardsmanager.xmlImport.ProjectParser;
 
 
 /**
@@ -120,7 +121,7 @@ public class ProjectCursorAdapter extends CursorAdapter{
             int noOfCardsCompleted  = query.getCompletedCardCount(projectId, projectStacks);
             tvCardInfo.setText(res.getString(R.string.cards) + ": " + noOfCardsTotal);
             Log.d(TAG, "no of cards completed: " + noOfCardsCompleted + ", noOfCardsTotal: " + noOfCardsTotal);
-            progressClip.setLevel((int)(((double)noOfCardsCompleted/noOfCardsTotal) * 10000));
+            progressClip.setLevel((int) (((double) noOfCardsCompleted / noOfCardsTotal) * 10000));
             btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,7 +141,7 @@ public class ProjectCursorAdapter extends CursorAdapter{
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteSelectedProject(context, projectId);
+                    deleteSelectedProjects(context, new long[]{projectId});
                 }
             });
             btnLearn.setOnClickListener(new View.OnClickListener() {
@@ -192,14 +193,14 @@ public class ProjectCursorAdapter extends CursorAdapter{
         return activity.getFragmentManager();
     }
 
-    private void deleteSelectedProject(Context context, long projectId) {
+    public void deleteSelectedProjects(Context context, long[] projectIds) {
         this.context = context;
-        OnDeleteProjectsDialogListener dialogClickListener = new OnDeleteProjectsDialogListener(context, projectId);
+        OnDeleteProjectsDialogListener dialogClickListener = new OnDeleteProjectsDialogListener(context, projectIds);
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setNeutralButton(context.getResources().getString(R.string.no), dialogClickListener)
                 .setPositiveButton(context.getResources().getString(R.string.yes), dialogClickListener)
                 .setTitle(context.getResources().getString(R.string.delete))
-                .setMessage(context.getResources().getQuantityString(R.plurals.really_delete_project, 1, 1))
+                .setMessage(context.getResources().getQuantityString(R.plurals.really_delete_project, projectIds.length, projectIds.length))
                 .setCancelable(false);
         deleteDialog = builder.show();
     }
@@ -207,19 +208,18 @@ public class ProjectCursorAdapter extends CursorAdapter{
     class OnDeleteProjectsDialogListener implements DialogInterface.OnClickListener {
 
 
-        long projectId;
+        long[] projectIds;
 
-        OnDeleteProjectsDialogListener(Context context, long projectId) {
-            this.projectId = projectId;
+        OnDeleteProjectsDialogListener(Context context, long[] projectId) {
+            this.projectIds = projectId;
         }
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-                    new DeleteProjectTask().execute(projectId);
+                    new DeleteProjectsTask().execute(projectIds);
                     break;
-
                 case DialogInterface.BUTTON_NEGATIVE:
                     // user cancelled
                     break;
@@ -227,27 +227,30 @@ public class ProjectCursorAdapter extends CursorAdapter{
         }
     }
 
-    class DeleteProjectTask extends AsyncTask<Long, Void, Void> {
+    class DeleteProjectsTask extends AsyncTask<long[], Void, Integer> {
         ProgressDialog d;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            d = ProgressDialog.show(ProjectCursorAdapter.this.context, "", "Please wait");
+            d = ProgressDialog.show(context, context.getString(R.string.delete), context.getString(R.string.please_wait));
         }
 
         @Override
-        protected Void doInBackground(Long... projectIds) {
-            new ProjectQueries(context).deleteProjectWithId(projectIds[0]);
-            return null;
+        protected Integer doInBackground(long[]... projectIds) {
+            ProjectQueries projectQueries = new ProjectQueries(context);
+            for (long l : projectIds[0]) {
+                projectQueries.deleteProjectWithId(l);
+            }
+            return projectIds[0].length;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer numberOfProjectsDeleted) {
+            super.onPostExecute(numberOfProjectsDeleted);
             d.dismiss();
             Toast.makeText(context, context.getResources().
-                    getQuantityString(R.plurals.deleted_project, 1, 1), Toast.LENGTH_SHORT).show();
+                    getQuantityString(R.plurals.deleted_project, numberOfProjectsDeleted, numberOfProjectsDeleted), Toast.LENGTH_SHORT).show();
         }
     }
 

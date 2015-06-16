@@ -100,23 +100,29 @@
 
     <string name="cant_delete">can\'t be deleted!</string>
 
-    <string name="download">Download ZIP &#8230;</string>
-    <string name="enter_download_url">Enter Download URL</string>
+    <string name="download_zip">Download file &#8230;</string>
+    <string name="enter_download_url">Enter Download link</string>
     <string name="start_download">Start download</string>
 
-    <string name="title_activity_display_labels">DisplayLabelsActivity</string>
-    <string name="title_activity_display_cards">DisplayCardsActivity</string>
-    <string name="title_activity_learning">LearningActivity</string>
-    <string name="title_activity_prepare_learning">PrepareLearningActivity</string>
-    <string name="title_activity_xml_import">XMLImportActivity</string>
-    <string name="title_activity_learning_settings">LearningSettingsActivity</string>
-    <string name="finished">Successfully imported contents of ZIP ;)</string>
-    <string name="connection_error">Connection error :( \n\nPlease make sure that you use an URL that contains a ZIP file with flashcards!</string>
+    <string name="importing">Import&#8230;</string>
+    <string name="deleting">Delete&#8230;</string>
+    <string name="please_wait">Please wait&#8230;</string>
+
+    <string name="title_activity_display_labels">Labels</string>
+    <string name="title_activity_display_cards">Cards</string>
+    <string name="title_activity_learning">Learning</string>
+    <string name="title_activity_xml_import">Download file</string>
+    <string name="title_activity_learning_settings">Settings - Learning</string>
+
+    <string name="success_download">Successfully downloaded files ;)</string>
+    <string name="success_import">Successfully imported files ;)</string>
+    <string name="io_error">File error :( \n\nPlease make sure that you selected a ZIP file with flashcards!</string>
+    <string name="connection_error">Connection error :( \n\nPlease make sure that you use a link providing a ZIP file with flashcards!</string>
     <string name="network_error">Network error :( \n\nYou seem to have no internet connection&#8230; please enable internet access or start your download later</string>
     <string name="xml_error">Error parsing xml :( \n\nPlease make sure the files you try to download are not corrupted!</string>
 
     <string name="not_yet_implemented">Not yet implemented but coming soon :)</string>
-    <string name="download_url_missing">Download URL missing :( \n\nPlease enter a download URL!</string>
+    <string name="download_link_missing">Download link missing :( \n\nPlease enter a download link!</string>
 
     <string name="pref_text_title">Text settings</string>
     <string name="pref_font_size_text">Font size</string>
@@ -142,5 +148,7 @@
         <item>32</item>
     </string-array>
     <string name="stacks_plural">Stacks</string>
+    <string name="title_activity_prepare_learning">Please choose&#8230;</string>
+    <string name="title_activity_xml_download">Download from URL</string>
 
 </resources>

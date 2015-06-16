@@ -10,6 +10,7 @@ import org.random_access.flashcardsmanager.provider.contracts.MediaContract;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 /**
@@ -31,8 +32,21 @@ public class MediaQueries {
         this.context = context;
     }
 
+
+    public Bitmap getMediaForFlashcard(long projectId, long flashcardId, String picType) {
+        Bitmap bmp;
+        Cursor cursor = context.getContentResolver().query(MediaContract.CONTENT_URI, MEDIA_PROJECTION, MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID + " = ? " +
+                        "AND " + MediaContract.MediaEntry.COLUMN_NAME_PICTYPE + " = ? ",
+                new String[]{flashcardId + "", picType}, null);
+        if (cursor.moveToFirst()) {
+            return MediaExchanger.getImage(context, projectId, cursor.getString(2));
+        }
+        cursor.close();
+        return null;
+    }
+
     public void insertMedia(long projectId, long cardId, String mediaType, String sourcePath) throws IOException {
-        String mediaPath = MediaExchanger.importMedia(context, projectId, cardId, mediaType, sourcePath);
+        String mediaPath = MediaExchanger.importImage(context, projectId, cardId, mediaType, sourcePath);
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID, cardId);
         contentValues.put(MediaContract.MediaEntry.COLUMN_NAME_MEDIAPATH, mediaPath);
@@ -46,7 +60,7 @@ public class MediaQueries {
                 new String[]{flashcardId + ""}, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                MediaExchanger.deleteMedia(context, projectId ,cursor.getString(2));
+                MediaExchanger.deleteImage(context, projectId, cursor.getString(2));
                 mediaIds.add(cursor.getLong(0));
                 cursor.moveToNext();
             }

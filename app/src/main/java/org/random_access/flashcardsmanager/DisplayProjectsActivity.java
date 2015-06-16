@@ -2,15 +2,16 @@ package org.random_access.flashcardsmanager;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +21,19 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.net.Uri;
 
 import org.random_access.flashcardsmanager.adapter.ProjectCursorAdapter;
+import org.random_access.flashcardsmanager.helpers.MyFileUtils;
 import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
+import org.random_access.flashcardsmanager.xmlImport.UnzipHelper;
+import org.random_access.flashcardsmanager.xmlImport.XMLExchanger;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Project: FlashCards Manager for Android
@@ -37,8 +47,10 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
     private static final String TAG = DisplayProjectsActivity.class.getSimpleName();
 
     private static final String TAG_ADD_PROJECT = "add-project";
-
     public static final String TAG_PROJECT_ID = "project-id";
+
+    private static final int FILE_SELECT_REQUEST = 1000;
+    private static final String IMPORT_DIR = "import";
 
     private ListView mProjectListView;
     private ProjectCursorAdapter mProjectAdapter;
@@ -75,13 +87,41 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                 ProjectDialogFragment addProjectFragment = ProjectDialogFragment.newInstance(true, -1);
                 addProjectFragment.show(getFragmentManager(), TAG_ADD_PROJECT);
                 return true;
-            case R.id.action_import:
-                Intent intent = new Intent(this, XMLImportActivity.class);
-                startActivity(intent);
+            case R.id.action_download_zip:
+                Intent downloadIntent = new Intent(this, XMLDownloadActivity.class);
+                startActivity(downloadIntent);
+                return true;
+            case R.id.action_import_file:
+                showFileChooser();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            Intent chooser = Intent.createChooser(intent, "Select file");
+            startActivityForResult(chooser, FILE_SELECT_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "No file manager found.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FILE_SELECT_REQUEST && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            new ImportXmlTask().execute(uri);
+        }
+    }
+
 
     @Override
     protected void onResume() {
@@ -109,7 +149,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
         mProjectAdapter.swapCursor(null);
     }
 
-    private void deleteSelectedProjects() {
+    /*private void deleteSelectedProjects() {
         long[] currentSelections = mProjectListView.getCheckedItemIds();
         OnDeleteProjectsDialogListener dialogClickListener = new OnDeleteProjectsDialogListener(currentSelections);
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -119,9 +159,9 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                 .setMessage(getResources().getQuantityString(R.plurals.really_delete_project, currentSelections.length, currentSelections.length))
                 .setCancelable(false);
         builder.show();
-    }
+    } */
 
-    class OnDeleteProjectsDialogListener implements DialogInterface.OnClickListener {
+    /* class OnDeleteProjectsDialogListener implements DialogInterface.OnClickListener {
 
         long[] currentSelection;
 
@@ -145,7 +185,8 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
                     break;
             }
         }
-    }
+    } */
+
 
     private void setListActions () {
         mProjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,7 +221,8 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
 
                 switch (item.getItemId()) {
                     case R.id.action_delete_project:
-                        deleteSelectedProjects();
+                        long[] currentSelections = mProjectListView.getCheckedItemIds();
+                        mProjectAdapter.deleteSelectedProjects(DisplayProjectsActivity.this, currentSelections);
                         mode.finish(); // Action picked, so close the CAB
                         return true;
                     default:
@@ -199,5 +241,41 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
             }
         });
     }
+
+    private class ImportXmlTask extends AsyncTask<Uri, Void, String> {
+        ProgressDialog d;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            d = ProgressDialog.show(DisplayProjectsActivity.this, getResources().getString(R.string.importing),getResources().getString(R.string.please_wait));
+        }
+
+        @Override
+        protected String doInBackground(Uri... uris) {
+            InputStream is = null;
+            try {
+                is = getContentResolver().openInputStream(uris[0]);
+                UnzipHelper.unzip(is, getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR, DisplayProjectsActivity.this);
+                XMLExchanger xmlExchanger = new XMLExchanger(DisplayProjectsActivity.this, IMPORT_DIR);
+                xmlExchanger.importProjects();
+                MyFileUtils.deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
+                return getResources().getString(R.string.success_import);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return getResources().getString(R.string.io_error);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+                return getResources().getString(R.string.xml_error);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            d.dismiss();
+            Toast.makeText(DisplayProjectsActivity.this, result, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

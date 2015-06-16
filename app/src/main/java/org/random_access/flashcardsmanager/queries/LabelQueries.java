@@ -46,14 +46,15 @@ public class LabelQueries {
     }
 
     public long getLabelId(String labelName, long projectId) {
+        long labelId = -1;
         Cursor c = context.getContentResolver().query(LabelContract.CONTENT_URI, labelProjection, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ?  AND "
                 + LabelContract.LabelEntry.COLUMN_NAME_TITLE + " = ? ",
                 new String[] {projectId + "", labelName}, null);
         if (c.moveToFirst() && c.getCount() == 1) {
-            return c.getLong(0);
+            labelId = c.getLong(0);
         }
         c.close();
-        return -1; // TODO exception
+        return labelId;
     }
 
     public Uri addLabel(long projectId, String labelTitle) {
@@ -65,25 +66,25 @@ public class LabelQueries {
 
     public boolean deleteLabel(long labelId, long projectId) {
         String name = "";
-        Cursor c0  = context.getContentResolver().query(Uri.parse(LabelContract.CONTENT_URI + "/" + labelId), labelProjection, null, null, null);
-        if (c0.moveToFirst()) {
-           name = c0.getString(1);
+        Cursor cl  = context.getContentResolver().query(Uri.parse(LabelContract.CONTENT_URI + "/" + labelId), labelProjection, null, null, null);
+        if (cl.moveToFirst()) {
+           name = cl.getString(1);
         }
-        Cursor c = getFlashcardsWithLabel(labelId);
-        if (c.moveToFirst()) {
+        cl.close();
+        Cursor cf = getFlashcardsWithLabel(labelId);
+        if (cf.moveToFirst()) {
             if (name.equals(context.getResources().getString(R.string.uncategorized))) {
                 return false;
             }
             FlashCardQueries queries = new FlashCardQueries(context);
             long uncategorizedLabelId = findOrCreateUncategorizedLabel(projectId);
-            while(!c.isAfterLast()) {
-                deleteLfRelation(c.getLong(1));
-                queries.assignLabelToCard(c.getLong(0), uncategorizedLabelId);
-                c.moveToNext();
+            while(!cf.isAfterLast()) {
+                deleteLfRelation(cf.getLong(1));
+                queries.assignLabelToCard(cf.getLong(0), uncategorizedLabelId);
+                cf.moveToNext();
             }
         }
-        c.close();
-
+        cf.close();
         context.getContentResolver().delete(LabelContract.CONTENT_URI,
                 LabelContract.LabelEntry._ID + "=?", new String[]{labelId + ""});
         return true;
@@ -104,8 +105,8 @@ public class LabelQueries {
                 }
                 c.moveToNext();
             }
-            c.close();
         }
+        c.close();
         return Long.parseLong(addLabel(projectId, context.getResources().getString(R.string.uncategorized)).getLastPathSegment());
     }
 
