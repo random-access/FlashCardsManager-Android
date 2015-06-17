@@ -149,44 +149,6 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
         mProjectAdapter.swapCursor(null);
     }
 
-    /*private void deleteSelectedProjects() {
-        long[] currentSelections = mProjectListView.getCheckedItemIds();
-        OnDeleteProjectsDialogListener dialogClickListener = new OnDeleteProjectsDialogListener(currentSelections);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setNeutralButton(getResources().getString(R.string.no), dialogClickListener)
-                .setPositiveButton(getResources().getString(R.string.yes), dialogClickListener)
-                .setTitle(getResources().getString(R.string.delete))
-                .setMessage(getResources().getQuantityString(R.plurals.really_delete_project, currentSelections.length, currentSelections.length))
-                .setCancelable(false);
-        builder.show();
-    } */
-
-    /* class OnDeleteProjectsDialogListener implements DialogInterface.OnClickListener {
-
-        long[] currentSelection;
-
-        OnDeleteProjectsDialogListener(long[] currentSelection) {
-            this.currentSelection = currentSelection;
-        }
-
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which){
-                case DialogInterface.BUTTON_POSITIVE:
-                    int selCount = currentSelection.length;
-                    for (long l : currentSelection) {
-                        new ProjectQueries(DisplayProjectsActivity.this).deleteProjectWithId(l);
-                    }
-                    Toast.makeText(DisplayProjectsActivity.this, getResources().
-                            getQuantityString(R.plurals.deleted_project, selCount, selCount), Toast.LENGTH_SHORT).show();
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    // user cancelled
-                    break;
-            }
-        }
-    } */
-
 
     private void setListActions () {
         mProjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

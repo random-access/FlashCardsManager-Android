@@ -19,7 +19,7 @@
     <ImageView
         android:id="@+id/image_progress"
         android:background="@drawable/shape_project_progress"
-        android:src="@color/grey"
+        android:src="@drawable/progress_drawable"
         android:layout_height="20dp"
         android:layout_width="fill_parent"
         android:layout_below="@id/p_ext_title" />
