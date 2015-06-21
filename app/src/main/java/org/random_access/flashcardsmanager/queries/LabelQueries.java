@@ -45,12 +45,16 @@ public class LabelQueries {
         return labels;
     }
 
+    public boolean labelAlreadyExisting(String labelName, long projectId) {
+        return (getLabelId(labelName, projectId) != -1);
+    }
+
     public long getLabelId(String labelName, long projectId) {
         long labelId = -1;
         Cursor c = context.getContentResolver().query(LabelContract.CONTENT_URI, labelProjection, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ?  AND "
                 + LabelContract.LabelEntry.COLUMN_NAME_TITLE + " = ? ",
                 new String[] {projectId + "", labelName}, null);
-        if (c.moveToFirst() && c.getCount() == 1) {
+        if (c.moveToFirst()) {
             labelId = c.getLong(0);
         }
         c.close();

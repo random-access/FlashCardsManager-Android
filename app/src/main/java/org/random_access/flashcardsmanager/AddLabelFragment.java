@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
+import org.random_access.flashcardsmanager.queries.LabelQueries;
 
 /**
  * Project: FlashCards Manager for Android
@@ -94,6 +95,8 @@ public class AddLabelFragment extends DialogFragment {
         private void handleDialogInput(String lTitle) {
             if (TextUtils.isEmpty(lTitle)) {
                 title.setError(res.getString(R.string.error_empty_field));
+            } else if (new LabelQueries(getContext()).labelAlreadyExisting(lTitle, mProjectId)){
+                title.setError(res.getString(R.string.l_duplicate));
             } else {
                 ContentValues values = new ContentValues();
                 values.put(LabelContract.LabelEntry.COLUMN_NAME_TITLE, lTitle);

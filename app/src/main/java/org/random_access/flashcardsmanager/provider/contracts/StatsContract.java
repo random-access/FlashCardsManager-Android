@@ -45,6 +45,7 @@ public class StatsContract {
         public static final String COLUMN_NAME_RIGHT_ANSWERS = "_RIGHT_ANSWERS";
         public static final String COLUMN_NAME_NEUTRAL_ANSWERS = "_NEUTRAL_ANSWERS";
         public static final String COLUMN_NAME_FK_P_ID = "_FK_P_ID";
+        public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_DATE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_DATE;
@@ -52,6 +53,7 @@ public class StatsContract {
         public static final String COLUMN_NAME_RIGHT_ANSWERS_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_RIGHT_ANSWERS;
         public static final String COLUMN_NAME_NEUTRAL_ANSWERS_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_NEUTRAL_ANSWERS;
         public static final String COLUMN_NAME_FK_P_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_P_ID;
+        public static final String COLUMN_NAME_LAST_MODIFIED_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_LAST_MODIFIED;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
@@ -63,6 +65,7 @@ public class StatsContract {
             + StatsEntry.COLUMN_NAME_RIGHT_ANSWERS + " integer not null, "
             + StatsEntry.COLUMN_NAME_NEUTRAL_ANSWERS + " integer not null, "
             + StatsEntry.COLUMN_NAME_FK_P_ID + " integer, "
+            + StatsEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1, "
             + "foreign key (" + StatsEntry.COLUMN_NAME_FK_P_ID + ") references "
             +  ProjectContract.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
             + ");";
@@ -73,7 +76,9 @@ public class StatsContract {
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add upgrade procedure if necessary
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + TABLE_NAME + " add column " + StatsEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1");
+            Log.d(TAG, TABLE_NAME + " updated: old version: " + oldVersion + ", new version: " + newVersion + "(added "+ StatsEntry.COLUMN_NAME_LAST_MODIFIED + " column)");
+        }
     }
-
 }

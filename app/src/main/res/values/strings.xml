@@ -26,6 +26,7 @@
     <string name="l_delete">Delete label</string>
     <string name="l_add_success">Label added successfully!</string>
     <string name="l_edit_success">Label edited successfully!</string>
+    <string name="l_duplicate">Duplicate found! Please choose another title!</string>
 
     <string name="title">Title</string>
     <string name="stacks">Stack</string>

@@ -106,6 +106,8 @@ public class ProjectCursorAdapter extends CursorAdapter{
             ImageButton btnOpen = (ImageButton) view.findViewById(R.id.btn_open);
             ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btn_delete);
             ImageButton btnLearn = (ImageButton) view.findViewById(R.id.btn_learn);
+            ImageButton btnSync = (ImageButton) view.findViewById(R.id.btn_sync);
+            btnSync.setColorFilter(res.getColor(R.color.light_blue));
 
             // get data
             final long projectId = cursor.getLong(0);
@@ -151,6 +153,13 @@ public class ProjectCursorAdapter extends CursorAdapter{
                     Log.d(TAG, "Open prepare learning dialog");
                     PrepareLearningDialog d = PrepareLearningDialog.newInstance(projectId);
                     d.show(getFragmentManager(context), TAG_PREPARE_LEARNING);
+                }
+            });
+            btnSync.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, R.string.not_yet_implemented, Toast.LENGTH_SHORT).show();
+                    // TODO implement
                 }
             });
 

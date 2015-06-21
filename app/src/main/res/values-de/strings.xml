@@ -129,4 +129,5 @@
     <string name="please_wait">Bitte warten&#8230;</string>
     <string name="deleting">Löschen&#8230;</string>
     <string name="io_error">Datei-Fehler :(\n\nBitte stelle sicher, dass du eine ZIP-Datei mit Lernkarten ausgewählt hast!</string>
+    <string name="l_duplicate">Duplikat gefunden! Bitte wähle einen anderen Titel!</string>
 </resources>

@@ -36,10 +36,12 @@ public class LabelContract {
 
         public static final String COLUMN_NAME_TITLE = "_TITLE";
         public static final String COLUMN_NAME_FK_P_ID = "_FK_P_ID";
+        public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_TITLE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_TITLE;
         public static final String COLUMN_NAME_FK_P_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_P_ID;
+        public static final String COLUMN_NAME_LAST_MODIFIED_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_LAST_MODIFIED;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
@@ -48,6 +50,7 @@ public class LabelContract {
             + LabelEntry._ID + " integer primary key autoincrement, "
             + LabelEntry.COLUMN_NAME_TITLE + " text not null, "
             + LabelEntry.COLUMN_NAME_FK_P_ID + " integer, "
+            + LabelEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1, "
             + "foreign key (" + LabelEntry.COLUMN_NAME_FK_P_ID + ") references "
             +  ProjectContract.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
             + ");";
@@ -58,7 +61,10 @@ public class LabelContract {
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add upgrade procedure if necessary
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + TABLE_NAME + " add column " + LabelEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1");
+            Log.d(TAG, TABLE_NAME + " updated: old version: " + oldVersion + ", new version: " + newVersion + "(added " + LabelEntry.COLUMN_NAME_LAST_MODIFIED + " column)");
+        }
     }
 
 }

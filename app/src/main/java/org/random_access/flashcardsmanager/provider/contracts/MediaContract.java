@@ -38,11 +38,13 @@ public class MediaContract {
         public static final String COLUMN_NAME_MEDIAPATH = "_MEDIA_PATH";
         public static final String COLUMN_NAME_PICTYPE = "_PIC_TYPE";
         public static final String COLUMN_NAME_FK_F_ID = "_FK_F_ID";
+        public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_MEDIAPATH_FULLNAME = TABLE_NAME  + "." + COLUMN_NAME_MEDIAPATH;
         public static final String COLUMN_NAME_PICTYPE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_PICTYPE;
         public static final String COLUMN_NAME_FK_F_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_F_ID;
+        public static final String COLUMN_NAME_LAST_MODIFIED_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_LAST_MODIFIED;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
@@ -52,6 +54,7 @@ public class MediaContract {
             + MediaEntry.COLUMN_NAME_MEDIAPATH + " text not null, "
             + MediaEntry.COLUMN_NAME_PICTYPE + " text not null, "
             + MediaEntry.COLUMN_NAME_FK_F_ID + " integer, "
+            + MediaEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1, "
             + "foreign key (" + MediaEntry.COLUMN_NAME_FK_F_ID + ") references "
             + FlashCardContract.TABLE_NAME + " (" + FlashCardContract.FlashCardEntry._ID + ")"
             + ");";
@@ -62,7 +65,10 @@ public class MediaContract {
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add upgrade procedure if necessary
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + TABLE_NAME + " add column " + MediaEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1");
+            Log.d(TAG, TABLE_NAME + " updated: old version: " + oldVersion + ", new version: " + newVersion + "(added " + MediaEntry.COLUMN_NAME_LAST_MODIFIED + " column)");
+        }
     }
 
 }

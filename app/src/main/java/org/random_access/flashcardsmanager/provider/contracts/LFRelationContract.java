@@ -36,10 +36,12 @@ public class LFRelationContract {
 
         public static final String COLUMN_NAME_FK_L_ID = "_FK_L_ID";
         public static final String COLUMN_NAME_FK_F_ID = "_FK_F_ID";
+        public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_FK_L_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_L_ID;
         public static final String COLUMN_NAME_FK_F_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_F_ID;
+        public static final String COLUMN_NAME_LAST_MODIFIED_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_LAST_MODIFIED;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
@@ -48,6 +50,7 @@ public class LFRelationContract {
             + LFRelEntry._ID + " integer primary key autoincrement, "
             + LFRelEntry.COLUMN_NAME_FK_L_ID + " integer, "
             + LFRelEntry.COLUMN_NAME_FK_F_ID + " integer, "
+            + LFRelEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1, "
             + "foreign key (" + LFRelEntry.COLUMN_NAME_FK_L_ID + ") references "
             +  LabelContract.TABLE_NAME + " (" + LabelContract.LabelEntry._ID + "), "
             + "foreign key (" + LFRelEntry.COLUMN_NAME_FK_F_ID + ") references "
@@ -60,7 +63,10 @@ public class LFRelationContract {
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add upgrade procedure if necessary
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + TABLE_NAME + " add column " + LFRelEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1");
+            Log.d(TAG, TABLE_NAME + " updated: old version: " + oldVersion + ", new version: " + newVersion + "(added " + LFRelEntry.COLUMN_NAME_LAST_MODIFIED + " column)");
+        }
     }
 
 }

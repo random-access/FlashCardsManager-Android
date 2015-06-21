@@ -37,11 +37,13 @@ public class ProjectContract {
         public static final String COLUMN_NAME_TITLE = "_TITLE";
         public static final String COLUMN_NAME_DESCRIPTION = "_DESCRIPTION";
         public static final String COLUMN_NAME_STACKS = "_STACKS";
+        public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_TITLE_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_TITLE;
         public static final String COLUMN_NAME_DESCRIPTION_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_DESCRIPTION;
-        public static final String COLUMN_NAMEß_STACKS_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_STACKS;
+        public static final String COLUMN_NAME_STACKS_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_STACKS;
+        public static final String COLUMN_NAME_LAST_MODIFIED_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_LAST_MODIFIED;
     }
 
     private static final String DATABASE_CREATE = "create table if not exists "
@@ -50,7 +52,8 @@ public class ProjectContract {
             + ProjectEntry._ID + " integer primary key autoincrement, "
             + ProjectEntry.COLUMN_NAME_TITLE + " text not null, "
             + ProjectEntry.COLUMN_NAME_DESCRIPTION + " text, "
-            + ProjectEntry.COLUMN_NAME_STACKS + " integer not null"
+            + ProjectEntry.COLUMN_NAME_STACKS + " integer not null, "
+            + ProjectEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1"
             + ");";
 
     public static void onCreate (SQLiteDatabase db) {
@@ -59,7 +62,10 @@ public class ProjectContract {
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add upgrade procedure if necessary
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + TABLE_NAME + " add column " + ProjectEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1");
+            Log.d(TAG, TABLE_NAME + " updated: old version: " + oldVersion + ", new version: " + newVersion + "(added " + ProjectEntry.COLUMN_NAME_LAST_MODIFIED + " column)");
+        }
     }
 
 }

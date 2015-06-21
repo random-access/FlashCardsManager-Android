@@ -40,12 +40,14 @@ public class FlashCardContract {
         public static final String COLUMN_NAME_ANSWER = "_ANSWER";
         public static final String COLUMN_NAME_STACK = "_STACK";
         public static final String COLUMN_NAME_FK_P_ID = "_FK_P_ID";
+        public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
         public static final String COLUMN_NAME_ID_FULLNAME = TABLE_NAME + "." + _ID;
         public static final String COLUMN_NAME_QUESTION_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_QUESTION;
         public static final String COLUMN_NAME_ANSWER_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_ANSWER;
         public static final String COLUMN_NAME_STACK_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_STACK;
         public static final String COLUMN_NAME_FK_P_ID_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_FK_P_ID;
+        public static final String COLUMN_NAME_LAST_MODIFIED_FULLNAME = TABLE_NAME + "." + COLUMN_NAME_LAST_MODIFIED;
     }
 
    private static final String DATABASE_CREATE = "create table if not exists "
@@ -56,6 +58,7 @@ public class FlashCardContract {
             + FlashCardEntry.COLUMN_NAME_ANSWER + " text not null, "
             + FlashCardEntry.COLUMN_NAME_STACK + " integer not null, "
             + FlashCardEntry.COLUMN_NAME_FK_P_ID + " integer, "
+            + FlashCardEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1, "
             + "foreign key (" + FlashCardEntry.COLUMN_NAME_FK_P_ID + ") references "
             +  ProjectContract.TABLE_NAME + " (" + ProjectContract.ProjectEntry._ID + ")"
             + ");";
@@ -66,7 +69,10 @@ public class FlashCardContract {
     }
 
     public static void onUpdate(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // add upgrade procedure if necessary
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("alter table " + TABLE_NAME + " add column " + FlashCardEntry.COLUMN_NAME_LAST_MODIFIED + " integer default -1");
+            Log.d(TAG, TABLE_NAME + " updated: old version: " + oldVersion + ", new version: " + newVersion + "(added " + FlashCardEntry.COLUMN_NAME_LAST_MODIFIED + " column)");
+        }
     }
 
 }

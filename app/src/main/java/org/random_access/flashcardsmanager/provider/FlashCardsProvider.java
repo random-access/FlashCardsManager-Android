@@ -58,6 +58,7 @@ public class FlashCardsProvider extends ContentProvider {
     private static HashMap<String, String> PROJECTION_MAP_STATS;
     private static HashMap<String, String> PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS;
 
+    public static final String COLUMN_NAME_LAST_MODIFIED = "_LAST_MODIFIED";
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -86,12 +87,14 @@ public class FlashCardsProvider extends ContentProvider {
         PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry._ID, ProjectContract.ProjectEntry.COLUMN_NAME_ID_FULLNAME);
         PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_TITLE, ProjectContract.ProjectEntry.COLUMN_NAME_TITLE_FULLNAME);
         PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION, ProjectContract.ProjectEntry.COLUMN_NAME_DESCRIPTION_FULLNAME);
-        PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, ProjectContract.ProjectEntry.COLUMN_NAMEß_STACKS_FULLNAME);
+        PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_STACKS, ProjectContract.ProjectEntry.COLUMN_NAME_STACKS_FULLNAME);
+        PROJECTION_MAP_PROJECTS.put(ProjectContract.ProjectEntry.COLUMN_NAME_LAST_MODIFIED, ProjectContract.ProjectEntry.COLUMN_NAME_LAST_MODIFIED_FULLNAME);
 
         PROJECTION_MAP_LABELS = new HashMap<>();
         PROJECTION_MAP_LABELS.put(LabelContract.LabelEntry._ID, LabelContract.LabelEntry.COLUMN_NAME_ID_FULLNAME);
         PROJECTION_MAP_LABELS.put(LabelContract.LabelEntry.COLUMN_NAME_TITLE, LabelContract.LabelEntry.COLUMN_NAME_TITLE_FULLNAME);
         PROJECTION_MAP_LABELS.put(LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID_FULLNAME);
+        PROJECTION_MAP_LABELS.put(LabelContract.LabelEntry.COLUMN_NAME_LAST_MODIFIED, LabelContract.LabelEntry.COLUMN_NAME_LAST_MODIFIED_FULLNAME);
 
         PROJECTION_MAP_FLASHCARDS = new HashMap<>();
         PROJECTION_MAP_FLASHCARDS.put(FlashCardContract.FlashCardEntry._ID, FlashCardContract.FlashCardEntry.COLUMN_NAME_ID_FULLNAME);
@@ -99,17 +102,20 @@ public class FlashCardsProvider extends ContentProvider {
         PROJECTION_MAP_FLASHCARDS.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER, FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER_FULLNAME);
         PROJECTION_MAP_FLASHCARDS.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK, FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK_FULLNAME);
         PROJECTION_MAP_FLASHCARDS.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID, FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID_FULLNAME);
+        PROJECTION_MAP_FLASHCARDS.put(FlashCardContract.FlashCardEntry.COLUMN_NAME_LAST_MODIFIED, FlashCardContract.FlashCardEntry.COLUMN_NAME_LAST_MODIFIED_FULLNAME);
 
         PROJECTION_MAP_LFRELS = new HashMap<>();
         PROJECTION_MAP_LFRELS.put(LFRelationContract.LFRelEntry._ID, LFRelationContract.LFRelEntry.COLUMN_NAME_ID_FULLNAME);
         PROJECTION_MAP_LFRELS.put(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID, LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID_FULLNAME);
         PROJECTION_MAP_LFRELS.put(LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID, LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID_FULLNAME);
+        PROJECTION_MAP_LFRELS.put(LFRelationContract.LFRelEntry.COLUMN_NAME_LAST_MODIFIED, LFRelationContract.LFRelEntry.COLUMN_NAME_LAST_MODIFIED_FULLNAME);
 
         PROJECTION_MAP_MEDIA = new HashMap<>();
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry._ID, MediaContract.MediaEntry.COLUMN_NAME_ID_FULLNAME);
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_MEDIAPATH, MediaContract.MediaEntry.COLUMN_NAME_MEDIAPATH_FULLNAME);
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_PICTYPE, MediaContract.MediaEntry.COLUMN_NAME_PICTYPE_FULLNAME);
         PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID, MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID_FULLNAME);
+        PROJECTION_MAP_MEDIA.put(MediaContract.MediaEntry.COLUMN_NAME_LAST_MODIFIED, MediaContract.MediaEntry.COLUMN_NAME_LAST_MODIFIED_FULLNAME);
 
         PROJECTION_MAP_STATS = new HashMap<>();
         PROJECTION_MAP_STATS.put(StatsContract.StatsEntry._ID, StatsContract.StatsEntry.COLUMN_NAME_ID_FULLNAME);
@@ -118,6 +124,7 @@ public class FlashCardsProvider extends ContentProvider {
         PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_RIGHT_ANSWERS, StatsContract.StatsEntry.COLUMN_NAME_RIGHT_ANSWERS_FULLNAME);
         PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_NEUTRAL_ANSWERS, StatsContract.StatsEntry.COLUMN_NAME_NEUTRAL_ANSWERS_FULLNAME);
         PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_FK_P_ID, StatsContract.StatsEntry.COLUMN_NAME_FK_P_ID_FULLNAME);
+        PROJECTION_MAP_STATS.put(StatsContract.StatsEntry.COLUMN_NAME_LAST_MODIFIED, StatsContract.StatsEntry.COLUMN_NAME_LAST_MODIFIED_FULLNAME);
 
         PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS = new HashMap<>();
         PROJECTION_MAP_FLASHCARD_JOIN_LFRELATIONS.putAll(PROJECTION_MAP_FLASHCARDS);
@@ -136,6 +143,7 @@ public class FlashCardsProvider extends ContentProvider {
         SQLiteDatabase sqlDB = flashCardDbOpenHelper.getWritableDatabase();
         int uriCode = uriMatcher.match(uri);
         String tableName = getTableName(uriCode);
+        addTimestamp(values, tableName);
         long id = sqlDB.insert(tableName, null, values);
         // notify observers
         getContext().getContentResolver().notifyChange(uri, null);
@@ -149,6 +157,7 @@ public class FlashCardsProvider extends ContentProvider {
         int uriCode = uriMatcher.match(uri);
         String tableName = getTableName(uriCode);
         String itemId = getTableIdColumn(uriCode);
+        addTimestamp(values, tableName);
         if (itemId == null) {
             numberOfUpdates = sqlDB.update(tableName, values, selection, selectionArgs);
         } else {
@@ -340,6 +349,10 @@ public class FlashCardsProvider extends ContentProvider {
 
     private void checkColumnProjection(String[] projection) {
         // TODO check if requested columns in selection are valid
+    }
+
+    private void addTimestamp(ContentValues contentValues, String tableName) {
+        contentValues.put(COLUMN_NAME_LAST_MODIFIED, System.currentTimeMillis());
     }
 
 }
