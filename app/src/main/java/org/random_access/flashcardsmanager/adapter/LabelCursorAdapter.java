@@ -9,7 +9,11 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.random_access.flashcardsmanager.DisplayLabelsActivity;
 import org.random_access.flashcardsmanager.R;
+import org.random_access.flashcardsmanager.helpers.Status;
+import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
+import org.random_access.flashcardsmanager.queries.LabelQueries;
 
 /**
  * Project: FlashCards Manager for Android
@@ -32,27 +36,28 @@ public class LabelCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         // get view references
         ImageView imgStatus = (ImageView) view.findViewById(R.id.id_label_status);
-        TextView tvProjectTitle = (TextView) view.findViewById(R.id.id_label_text);
+        TextView tvLabelTitle = (TextView) view.findViewById(R.id.id_label_text);
 
         // get data
-        String projectTitle = cursor.getString(1);
+        String labelTitle = cursor.getString(1);
 
         // bind data to view
-        setStatusDrawable(0, imgStatus);
-        tvProjectTitle.setText(projectTitle);
+        setStatusDrawable(new LabelQueries(context).getLabelStatus(cursor.getLong(DisplayLabelsActivity.COL_LABEL_ID),
+                cursor.getLong(DisplayLabelsActivity.COL_FK_P_ID)), imgStatus);
+        tvLabelTitle.setText(labelTitle);
     }
 
-    private void setStatusDrawable(int status, ImageView view) {
+    private void setStatusDrawable(Status status , ImageView view) {
         // TODO: replace this fake method with a real one
         switch(status) {
-            case 0:
-                view.setImageResource(R.drawable.shape_circle_red);
+            case GREEN:
+                view.setImageResource(R.drawable.shape_circle_green);
                 break;
-            case 1:
+            case YELLOW:
                 view.setImageResource(R.drawable.shape_circle_yellow);
                 break;
             default:
-                view.setImageResource(R.drawable.shape_circle_green);
+                view.setImageResource(R.drawable.shape_circle_red);
                 break;
         }
     }

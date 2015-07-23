@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.random_access.flashcardsmanager.R;
+import org.random_access.flashcardsmanager.helpers.Status;
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
 import org.random_access.flashcardsmanager.provider.contracts.LabelContract;
 import org.random_access.flashcardsmanager.xmlImport.FlashCardParser;
+import org.random_access.flashcardsmanager.xmlImport.LFRelParser;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -119,6 +121,17 @@ public class LabelQueries {
                 LFRelationContract.LFRelEntry._ID};
         return context.getContentResolver().query(DbJoins.CONTENT_URI_FLASHCARDS_JOIN_LFRELS, LFREL_LIST_PROJECTION,
                 LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID + " = ? ", new String[]{labelId + ""}, null);
+    }
+
+    public Status getLabelStatus(long labelID, long projectId) {
+        int maxStack = new ProjectQueries(context).getNumberOfStacks(projectId);
+        String[] FLASHCARDS_STACK_PROJECTION = {FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK};
+        Cursor cursor = context.getContentResolver().query(DbJoins.CONTENT_URI_FLASHCARDS_JOIN_LFRELS,
+                FLASHCARDS_STACK_PROJECTION,
+                FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID + " = ? and " + LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID
+                + " = ? ", new String[]{projectId + "", labelID + ""},
+                FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK + " desc");
+        return QueryHelper.getStatus(cursor,maxStack);
     }
 
 }

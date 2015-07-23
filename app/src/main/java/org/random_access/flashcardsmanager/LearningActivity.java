@@ -344,9 +344,9 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
     private void fillFields() {
         setTitle((cardCursor.getPosition() + 1) + " / " + cardCursor.getCount());
-        txtQuestion.setText(Html.fromHtml(cardCursor.getString(COL_QUESTION)));
-        txtAnswer.setText(Html.fromHtml(cardCursor.getString(COL_ANSWER)));
-        addImagesIfPresent(cardCursor.getLong(COL_ID));
+        txtQuestion.setText(cardCursor.getCount() == 0 ? "" : Html.fromHtml(cardCursor.getString(COL_QUESTION)));
+        txtAnswer.setText(cardCursor.getCount() == 0 ? "" : Html.fromHtml(cardCursor.getString(COL_ANSWER)));
+        addImagesIfPresent(cardCursor.getCount() == 0 ? -1 : cardCursor.getLong(COL_ID));
     }
 
     private void addImagesIfPresent (long cardId) {

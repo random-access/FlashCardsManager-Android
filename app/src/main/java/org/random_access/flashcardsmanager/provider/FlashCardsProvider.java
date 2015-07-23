@@ -203,8 +203,8 @@ public class FlashCardsProvider extends ContentProvider {
         int uriCode = uriMatcher.match(uri);
         String tableName = getTableName(uriCode);
         HashMap<String,String> pMap = getProjections(uriCode);
-        queryBuilder.setTables(tableName);
         queryBuilder.setProjectionMap(pMap);
+        queryBuilder.setTables(tableName);
         checkColumnProjection(projection);
         String itemId = getTableIdColumn(uriCode);
         if (itemId != null) {

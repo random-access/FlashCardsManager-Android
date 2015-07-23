@@ -41,6 +41,10 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
     private ListView mLabelListView;
     private LabelCursorAdapter mLabelAdapter;
 
+    public static final  int COL_LABEL_ID = 0;
+    public static final int COL_LABEL_TITLE = 1;
+    public static final int COL_FK_P_ID = 2;
+
     private long mCurrentProject;
 
     @Override
@@ -94,7 +98,7 @@ public class DisplayLabelsActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] L_LIST_PROJECTION = { LabelContract.LabelEntry._ID,
-                LabelContract.LabelEntry.COLUMN_NAME_TITLE};
+                LabelContract.LabelEntry.COLUMN_NAME_TITLE, LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID};
         return new CursorLoader(this, LabelContract.CONTENT_URI, L_LIST_PROJECTION,
                 LabelContract.LabelEntry.COLUMN_NAME_FK_P_ID + " = ? ", new String[] {mCurrentProject + ""}, null);
     }

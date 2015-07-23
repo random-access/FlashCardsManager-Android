@@ -38,6 +38,10 @@ public class DisplayCardsActivity extends AppCompatActivity implements
     private ListView mCardListView;
     private FlashCardCursorAdapter mCardAdapter;
 
+    public static final int COL_ID = 0;
+    public static final int COL_QUESTION = 1;
+    public static final int COL_FK_P_ID = 2;
+
     private long mCurrentProject;
     private long mCurrentLabel;
 
@@ -94,7 +98,8 @@ public class DisplayCardsActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] C_LIST_PROJECTION = {FlashCardContract.FlashCardEntry._ID,
-                FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION};
+                FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION,
+                FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID};
         return new CursorLoader(this, DbJoins.CONTENT_URI_FLASHCARDS_JOIN_LFRELS, C_LIST_PROJECTION,
                 LFRelationContract.LFRelEntry.COLUMN_NAME_FK_L_ID + " = ? ", new String[]{mCurrentLabel + ""}, null); // TODO check if possible...
     }

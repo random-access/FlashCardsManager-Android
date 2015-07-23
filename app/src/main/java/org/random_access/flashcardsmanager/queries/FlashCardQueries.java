@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import org.random_access.flashcardsmanager.helpers.Status;
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
 import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
@@ -62,6 +63,14 @@ public class FlashCardQueries {
         int noOfRowsModified = context.getContentResolver().update(FlashCardContract.CONTENT_URI, values,
                 FlashCardContract.FlashCardEntry._ID + "= ? ", new String[]{cardId + ""});
         return noOfRowsModified > 0;
+    }
+
+    public Status getFlashcardStatus(long flashcardId, long projectId) {
+        int maxStack = new ProjectQueries(context).getNumberOfStacks(projectId);
+        String[] FLASHCARDS_STACK_PROJECTION = {FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK};
+        Cursor cursor = context.getContentResolver().query(FlashCardContract.CONTENT_URI, FLASHCARDS_STACK_PROJECTION,
+                FlashCardContract.FlashCardEntry._ID + " = ? ", new String[]{flashcardId + ""}, null);
+        return QueryHelper.getStatus(cursor,maxStack);
     }
 
 }

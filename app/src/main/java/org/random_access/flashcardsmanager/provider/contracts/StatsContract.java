@@ -40,7 +40,7 @@ public class StatsContract {
 
     public static abstract class StatsEntry implements BaseColumns {
 
-        public static final String COLUMN_NAME_DATE = "_QUESTION";
+        public static final String COLUMN_NAME_DATE = "_QUESTION"; //TODO rename to _DATE
         public static final String COLUMN_NAME_WRONG_ANSWERS = "_WRONG_ANSWERS";
         public static final String COLUMN_NAME_RIGHT_ANSWERS = "_RIGHT_ANSWERS";
         public static final String COLUMN_NAME_NEUTRAL_ANSWERS = "_NEUTRAL_ANSWERS";

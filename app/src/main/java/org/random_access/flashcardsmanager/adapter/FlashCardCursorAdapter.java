@@ -10,7 +10,10 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.random_access.flashcardsmanager.DisplayCardsActivity;
 import org.random_access.flashcardsmanager.R;
+import org.random_access.flashcardsmanager.helpers.Status;
+import org.random_access.flashcardsmanager.queries.FlashCardQueries;
 
 /**
  * Project: FlashCards Manager for Android
@@ -39,21 +42,22 @@ public class FlashCardCursorAdapter extends CursorAdapter {
         String cardTitle = cursor.getString(1);
 
         // bind view to data
-        setStatusDrawable(0, imgStatus);
+        setStatusDrawable(new FlashCardQueries(context).getFlashcardStatus(cursor.getLong(DisplayCardsActivity.COL_ID),
+                cursor.getLong(DisplayCardsActivity.COL_FK_P_ID)), imgStatus);
         txtQuestion.setText(Html.fromHtml(cardTitle));
     }
 
-    private void setStatusDrawable(int status, ImageView view) {
+    private void setStatusDrawable(Status status, ImageView view) {
         // TODO: replace this fake method with a real one
         switch(status) {
-            case 0:
-                view.setImageResource(R.drawable.shape_circle_red);
+            case GREEN:
+                view.setImageResource(R.drawable.shape_circle_green);
                 break;
-            case 1:
+            case YELLOW:
                 view.setImageResource(R.drawable.shape_circle_yellow);
                 break;
             default:
-                view.setImageResource(R.drawable.shape_circle_green);
+                view.setImageResource(R.drawable.shape_circle_red);
                 break;
         }
     }
