@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import org.random_access.flashcardsmanager.adapter.ProjectCursorAdapter;
 import org.random_access.flashcardsmanager.helpers.MyFileUtils;
 import org.random_access.flashcardsmanager.provider.contracts.ProjectContract;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
+import org.random_access.flashcardsmanager.xmlImport.ProjectRootFinder;
 import org.random_access.flashcardsmanager.xmlImport.UnzipHelper;
 import org.random_access.flashcardsmanager.xmlImport.XMLExchanger;
 import org.xmlpull.v1.XmlPullParserException;
@@ -34,6 +36,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Project: FlashCards Manager for Android
@@ -48,6 +52,7 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
 
     private static final String TAG_ADD_PROJECT = "add-project";
     public static final String TAG_PROJECT_ID = "project-id";
+    public static final String TAG_PROJECT_IMPORT = "project-import";
 
     private static final int FILE_SELECT_REQUEST = 1000;
     private static final String IMPORT_DIR = "import";
@@ -204,8 +209,9 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
         });
     }
 
-    private class ImportXmlTask extends AsyncTask<Uri, Void, String> {
+    private class ImportXmlTask extends AsyncTask<Uri, Void, ArrayList<String>> {
         ProgressDialog d;
+        Exception exc;
 
         @Override
         protected void onPreExecute() {
@@ -214,28 +220,29 @@ public class DisplayProjectsActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected String doInBackground(Uri... uris) {
+        protected ArrayList<String> doInBackground(Uri... uris) {
             InputStream is = null;
             try {
                 is = getContentResolver().openInputStream(uris[0]);
                 UnzipHelper.unzip(is, getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR, DisplayProjectsActivity.this);
-                XMLExchanger xmlExchanger = new XMLExchanger(DisplayProjectsActivity.this, IMPORT_DIR);
-                xmlExchanger.importProjects();
-                MyFileUtils.deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
-                return getResources().getString(R.string.success_import);
+                return new ProjectRootFinder(getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR).findProjectRootDirs();
             } catch (IOException e) {
-                e.printStackTrace();
-                return getResources().getString(R.string.io_error);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-                return getResources().getString(R.string.xml_error);
+                exc = e;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(ArrayList<String> result) {
             d.dismiss();
-            Toast.makeText(DisplayProjectsActivity.this, result, Toast.LENGTH_SHORT).show();
+            if (exc != null) {
+                exc.printStackTrace();
+                Toast.makeText(DisplayProjectsActivity.this, getResources().getString(R.string.io_error), Toast.LENGTH_SHORT).show();
+            } else {
+                PrepareImportDialog d = PrepareImportDialog.newInstance(result, IMPORT_DIR);
+                d.show(getFragmentManager(), TAG_PROJECT_IMPORT);
+
+            }
         }
     }
 

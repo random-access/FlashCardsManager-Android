@@ -27,6 +27,7 @@ public class MyFileUtils {
      * @return true if deleting all subfiles and the file itself was successful, false otherwise
      */
     public static boolean deleteRecursive(File file) {
+        Log.d(TAG, "Deleting: " + file.getName());
         boolean success = true;
         if (file.isDirectory()) {
             for (File f : file.listFiles()) {

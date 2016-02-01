@@ -10,6 +10,7 @@
     <string name="p_delete">Delete project</string>
     <string name="p_add_success">Project added successfully!</string>
     <string name="p_edit_success">Project edited successfully!</string>
+    <string name="p_import_choose">Choose project folders to import:</string>
 
     <string name="c_add">Add card</string>
     <string name="c_edit">Edit card</string>
@@ -117,6 +118,7 @@
 
     <string name="success_download">Successfully downloaded files ;)</string>
     <string name="success_import">Successfully imported files ;)</string>
+    <string name="no_import">No folder specified.</string>
     <string name="io_error">File error :( \n\nPlease make sure that you selected a ZIP file with flashcards!</string>
     <string name="connection_error">Connection error :( \n\nPlease make sure that you use a link providing a ZIP file with flashcards!</string>
     <string name="network_error">Network error :( \n\nYou seem to have no internet connection&#8230; please enable internet access or start your download later</string>

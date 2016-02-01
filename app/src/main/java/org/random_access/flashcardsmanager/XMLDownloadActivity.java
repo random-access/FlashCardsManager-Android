@@ -7,15 +7,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.random_access.flashcardsmanager.helpers.MyFileUtils;
+import org.random_access.flashcardsmanager.xmlImport.ProjectRootFinder;
 import org.random_access.flashcardsmanager.xmlImport.UnzipHelper;
 import org.random_access.flashcardsmanager.xmlImport.XMLExchanger;
 import org.xmlpull.v1.XmlPullParserException;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * <b>Project:</b> FlashCards Manager for Android <br>
@@ -35,6 +39,7 @@ import java.net.URL;
 public class XMLDownloadActivity extends AppCompatActivity {
 
     private static final String TAG = XMLDownloadActivity.class.getSimpleName();
+    private static final String TAG_PROJECT_IMPORT = "project-import";
 
     private static final String IMPORT_DIR = "import";
 
@@ -107,7 +112,9 @@ public class XMLDownloadActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    private class DownloadXmlTask extends AsyncTask<String, Void, String> {
+    private class DownloadXmlTask extends AsyncTask<String, Void, ArrayList<String>> {
+
+        private Exception exc;
 
         @Override
         protected void onPreExecute() {
@@ -116,31 +123,32 @@ public class XMLDownloadActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... urls) {
+        protected ArrayList<String> doInBackground(String... urls) {
             try {
                 loadXmlFromNetwork(urls[0]);
-                XMLExchanger xmlExchanger = new XMLExchanger(XMLDownloadActivity.this, IMPORT_DIR);
-                xmlExchanger.importProjects();
-                MyFileUtils.deleteRecursive(new File(getFilesDir().getAbsolutePath(), IMPORT_DIR));
-                return getResources().getString(R.string.success_download);
+                return new ProjectRootFinder(getFilesDir().getAbsolutePath() + "/" + IMPORT_DIR).findProjectRootDirs();
             } catch (IOException e) {
-                e.printStackTrace();
-                return getResources().getString(R.string.connection_error);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-                return getResources().getString(R.string.xml_error);
+                exc = e;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            progressBar.setVisibility(View.GONE);
-            tvShowDownload.setVisibility(View.VISIBLE);
-            tvShowDownload.setText(result);
+        protected void onPostExecute(ArrayList<String> result) {
+            if (exc != null) {
+                exc.printStackTrace();
+                tvShowDownload.setText(getResources().getString(R.string.connection_error));
+            } else {
+                progressBar.setVisibility(View.GONE);
+                tvShowDownload.setVisibility(View.VISIBLE);
+                tvShowDownload.setText(getResources().getString(R.string.success_download));
+                PrepareImportDialog d = PrepareImportDialog.newInstance(result, IMPORT_DIR);
+                d.show(getFragmentManager(), TAG_PROJECT_IMPORT);
+            }
         }
     }
 
-    private void loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
+    private void loadXmlFromNetwork(String urlString) throws IOException {
         HttpURLConnection conn = null;
         try {
             conn = downloadUrl(urlString);

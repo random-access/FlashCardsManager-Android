@@ -130,4 +130,6 @@
     <string name="deleting">Löschen&#8230;</string>
     <string name="io_error">Datei-Fehler :(\n\nBitte stelle sicher, dass du eine ZIP-Datei mit Lernkarten ausgewählt hast!</string>
     <string name="l_duplicate">Duplikat gefunden! Bitte wähle einen anderen Titel!</string>
+    <string name="p_import_choose">Wähle die zu importierenden Projektordner:</string>
+    <string name="no_import">Es wurde kein Ordner ausgewählt.</string>
 </resources>

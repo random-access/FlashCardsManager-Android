@@ -51,7 +51,8 @@ public class XMLExchanger {
 
     public XMLExchanger(Context context, String directory) {
         this.context = context;
-        this.IMPORT_DIRECTORY = context.getFilesDir().getAbsolutePath() + "/" + directory;
+        this.IMPORT_DIRECTORY = directory;
+        Log.d(TAG, "Import directory: " + directory);
         this.IMPORT_DIRECTORY_MEDIA = IMPORT_DIRECTORY + "/" + "media";
     }
 
