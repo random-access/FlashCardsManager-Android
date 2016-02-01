@@ -61,7 +61,7 @@ public class PrepareImportDialog extends DialogFragment {
         setupView();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(dialogView)
-                .setPositiveButton(res.getText(R.string.learn), new DialogInterface.OnClickListener() {
+                .setPositiveButton(res.getText(R.string.start_import), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Boolean[] checkedProjectRoots = new Boolean[lvProjects.getAdapter().getCount()];
@@ -74,6 +74,7 @@ public class PrepareImportDialog extends DialogFragment {
                 .setNeutralButton(res.getText(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        MyFileUtils.deleteRecursive(new File(getActivity().getFilesDir().getAbsolutePath(), importDir));
                         Log.d(TAG, "User cancelled");
                         // user cancelled
                     }

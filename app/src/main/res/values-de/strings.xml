@@ -132,4 +132,5 @@
     <string name="l_duplicate">Duplikat gefunden! Bitte wähle einen anderen Titel!</string>
     <string name="p_import_choose">Wähle die zu importierenden Projektordner:</string>
     <string name="no_import">Es wurde kein Ordner ausgewählt.</string>
+    <string name="start_import">Importieren</string>
 </resources>

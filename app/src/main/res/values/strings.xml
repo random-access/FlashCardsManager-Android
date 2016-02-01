@@ -48,6 +48,7 @@
     <string name="selection">Selection</string>
     <string name="and">and</string>
     <string name="or">or</string>
+    <string name="start_import">Import</string>
 
     <string name="random_order">Random order</string>
     <string name="match_criteria">Matching criteria</string>

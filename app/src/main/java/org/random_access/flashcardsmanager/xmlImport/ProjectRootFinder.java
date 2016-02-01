@@ -29,7 +29,7 @@ public class ProjectRootFinder {
         if (currentDir.isDirectory()) {
             File[] content = currentDir.listFiles();
             for (File f : content) {
-                if (f.getName().equals("media") && f.isDirectory()) {
+                if (f.getName().equals("projects.xml") && !f.isDirectory()) {
                     projectRoots.add(currentDir.getAbsolutePath());
                 } else {
                     searchRecursive(f.getAbsolutePath());
