@@ -91,7 +91,7 @@ public class MediaParser extends XMLParser{
                     id = Integer.parseInt(readContent(parser, ns, ELEM_MEDIA_ID));
                     break;
                 case ELEM_CARD_ID:
-                    id = Integer.parseInt(readContent(parser, ns, ELEM_CARD_ID));
+                    cardId = Integer.parseInt(readContent(parser, ns, ELEM_CARD_ID));
                     break;
                 case ELEM_PATH_TO_MEDIA:
                     pathToMedia = readContent(parser, ns, ELEM_PATH_TO_MEDIA);

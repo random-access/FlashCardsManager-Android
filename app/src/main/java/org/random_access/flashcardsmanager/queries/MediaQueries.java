@@ -34,7 +34,6 @@ public class MediaQueries {
 
 
     public Bitmap getMediaForFlashcard(long projectId, long flashcardId, String picType) {
-        Bitmap bmp;
         Cursor cursor = context.getContentResolver().query(MediaContract.CONTENT_URI, MEDIA_PROJECTION, MediaContract.MediaEntry.COLUMN_NAME_FK_F_ID + " = ? " +
                         "AND " + MediaContract.MediaEntry.COLUMN_NAME_PICTYPE + " = ? ",
                 new String[]{flashcardId + "", picType}, null);

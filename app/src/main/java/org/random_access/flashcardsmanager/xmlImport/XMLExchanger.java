@@ -123,8 +123,8 @@ public class XMLExchanger {
     private void importMedia(long xmlFId, long pId, long fId) throws IOException{
         MediaQueries mediaQueries = new MediaQueries(context);
         for (MediaParser.Media m : media) {
-            if (xmlFId == m.id) {
-                mediaQueries.insertMedia(pId, fId, m.picType, IMPORT_DIRECTORY_MEDIA + "/" + m.pathToMedia);
+            if (xmlFId == m.cardId) {
+                mediaQueries.insertMedia(pId, fId, m.picType, IMPORT_DIRECTORY_MEDIA + "/" +  m.pathToMedia);
             }
         }
     }
@@ -193,6 +193,11 @@ public class XMLExchanger {
                 inputStream.close();
             }
         }
+    }
+
+    private String constructPicName(long pId, long fId, String picType, String picName) {
+        String extension = picName.substring(picName.lastIndexOf('.'));
+        return "pic-" + pId + "-" + fId + "-" + picType + extension;
     }
 
 }

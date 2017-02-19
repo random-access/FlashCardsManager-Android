@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import org.random_access.flashcardsmanager.provider.contracts.DbJoins;
 import org.random_access.flashcardsmanager.provider.contracts.FlashCardContract;
+import org.random_access.flashcardsmanager.provider.contracts.LFRelationContract;
 import org.random_access.flashcardsmanager.queries.FlashCardQueries;
 import org.random_access.flashcardsmanager.queries.MediaQueries;
 import org.random_access.flashcardsmanager.queries.ProjectQueries;
@@ -59,13 +60,15 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
 
     private Cursor cardCursor;
 
-    private String[] C_LIST_PROJECTION = { FlashCardContract.FlashCardEntry._ID,
+    private String[] C_LIST_PROJECTION = {
+            LFRelationContract.LFRelEntry.COLUMN_NAME_FK_F_ID,
             FlashCardContract.FlashCardEntry.COLUMN_NAME_FK_P_ID,
             FlashCardContract.FlashCardEntry.COLUMN_NAME_STACK,
             FlashCardContract.FlashCardEntry.COLUMN_NAME_QUESTION,
-            FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER};
+            FlashCardContract.FlashCardEntry.COLUMN_NAME_ANSWER
+    };
 
-    private final int COL_ID = 0;
+    private final int COL_FLASHCARD_ID = 0;
     private final int COL_PROJECT_ID = 1;
     private final int COL_STACK = 2;
     private final int COL_QUESTION = 3;
@@ -271,7 +274,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void handleResult(Result result) {
-        long currentId = cardCursor.getLong(COL_ID);
+        long currentId = cardCursor.getLong(COL_FLASHCARD_ID);
         int currentStack = cardCursor.getInt(COL_STACK);
         String msg = "";
         statsTracking.put(currentId, result);
@@ -346,7 +349,7 @@ public class LearningActivity extends AppCompatActivity implements LoaderManager
         setTitle((cardCursor.getPosition() + 1) + " / " + cardCursor.getCount());
         txtQuestion.setText(cardCursor.getCount() == 0 ? "" : Html.fromHtml(cardCursor.getString(COL_QUESTION)));
         txtAnswer.setText(cardCursor.getCount() == 0 ? "" : Html.fromHtml(cardCursor.getString(COL_ANSWER)));
-        addImagesIfPresent(cardCursor.getCount() == 0 ? -1 : cardCursor.getLong(COL_ID));
+        addImagesIfPresent(cardCursor.getCount() == 0 ? -1 : cardCursor.getLong(COL_FLASHCARD_ID));
     }
 
     private void addImagesIfPresent (long cardId) {
